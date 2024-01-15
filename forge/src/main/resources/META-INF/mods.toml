@@ -1,0 +1,35 @@
+modLoader = "javafml"
+loaderVersion = "[${forge_version},)"
+#issueTrackerURL = ""
+license = "Insert License Here"
+
+[[mods]]
+modId = "deepdrilling"
+version = "${version}"
+displayName = "Deep Drilling"
+authors = "beeisyou"
+description = '''
+This is an example description! Tell everyone what your mod is about!
+'''
+logoFile = "icon.png"
+
+[[dependencies.deepdrilling]]
+modId = "forge"
+mandatory = true
+versionRange = "[${forge_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.deepdrilling]]
+modId = "minecraft"
+mandatory = true
+versionRange = "${minecraft_version}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.deepdrilling]]
+modId="create"
+mandatory=true
+versionRange="${create_version}"
+ordering="NONE"
+side="BOTH"
