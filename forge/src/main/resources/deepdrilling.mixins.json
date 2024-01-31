@@ -6,6 +6,7 @@
   "client": [
   ],
   "mixins": [
+    "CollectorModuleBEMixin"
   ],
   "injectors": {
     "defaultRequire": 1

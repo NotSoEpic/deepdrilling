@@ -5,6 +5,7 @@ import com.deepdrilling.blockentities.drillhead.DrillHeadBE;
 import com.simibubi.create.content.kinetics.base.BlockBreakingKineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
 import com.simibubi.create.foundation.utility.LangNumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -24,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -181,11 +183,12 @@ public class DrillCoreBE extends KineticBlockEntity {
             int totalTicks = ticksPerProgress() * 10;
             Lang.text("Drilling every:").style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
+            String time = LangNumberFormat.format(totalTicks / 20f);
             Lang.builder().space()
-                    .text(LangNumberFormat.format(totalTicks / 20f))
+                    .text(time)
                         .style(ChatFormatting.AQUA)
-                    .text(" seconds")
-                        .style(ChatFormatting.DARK_GRAY)
+                    .add(Lang.text(Objects.equals(time, "1") ? " second" : " seconds")
+                        .style(ChatFormatting.DARK_GRAY))
                     .forGoggles(tooltip);
             val = true;
         }

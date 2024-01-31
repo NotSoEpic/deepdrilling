@@ -1,41 +1,86 @@
 package com.deepdrilling.blocks;
 
 import com.deepdrilling.DBlocks;
+import com.deepdrilling.DrillMod;
 import com.deepdrilling.blockentities.drillhead.DDrillHeads;
 import com.deepdrilling.blockentities.drillhead.DrillHeadBE;
+import com.simibubi.create.AllShapes;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.content.kinetics.simpleRelays.ShaftBlock;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.placement.IPlacementHelper;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.placement.PlacementOffset;
+import com.simibubi.create.foundation.utility.VoxelShaper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public class DrillHeadBlock extends DirectionalKineticBlock implements IBE<DrillHeadBE> {
+
+    VoxelShaper SHAPE = new AllShapes.Builder(
+            Block.box(1, -1, 1, 15, 6, 15))
+            .add(Block.box(3, 6, 3, 13, 11, 13))
+            .add(Block.box(5, 11, 5, 11, 17, 11))
+            .forDirectional();
+
     public static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
+    public static final ResourceLocation DRILL_DURABILITY = DrillMod.id("drill_durability");
     public DrillHeadBlock(Properties properties) {
         super(properties);
     }
 
     @Override
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        BlockEntity blockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (blockEntity instanceof DrillHeadBE drillHeadBE) {
+            builder = builder.withDynamicDrop(DRILL_DURABILITY, (context, consumer) -> {
+                consumer.accept(drillHeadBE.setItemDamage(state.getBlock().asItem().getDefaultInstance()));
+            });
+        }
+        return super.getDrops(state, builder);
+    }
+
+    @Override
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
+
+        withBlockEntityDo(worldIn, pos, (drillHeadBE) -> drillHeadBE.applyItemDamage(stack));
+    }
+
+    @Override
     public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
         return face == state.getValue(FACING).getOpposite();
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE.get(state.getValue(FACING));
     }
 
     @Override
@@ -74,17 +119,6 @@ public class DrillHeadBlock extends DirectionalKineticBlock implements IBE<Drill
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
-
-        ItemStack heldItem = player.getItemInHand(hand);
-        if (player.mayBuild() && helper.matchesItem(heldItem))
-            return helper.getOffset(player, level, state, pos, hit)
-                    .placeInWorld(level, (BlockItem) heldItem.getItem(), player, hand, hit);
-        return InteractionResult.PASS;
-    }
-
-    @Override
     public Class<DrillHeadBE> getBlockEntityClass() {
         return DrillHeadBE.class;
     }
@@ -94,6 +128,9 @@ public class DrillHeadBlock extends DirectionalKineticBlock implements IBE<Drill
         return DDrillHeads.DRILL_HEAD_BE.get();
     }
 
+    // todo: figure out how the fuck blocks like shafts and cogs render
+    //  seriously - I had to do a lot more tomfoolery than create seems to do and
+    //  the PlacementHelper ghost doesn't even render at all
     @MethodsReturnNonnullByDefault
     private static class PlacementHelper implements IPlacementHelper {
 
@@ -114,6 +151,15 @@ public class DrillHeadBlock extends DirectionalKineticBlock implements IBE<Drill
             if (world.getBlockState(pos.relative(dir)).getMaterial().isReplaceable())
                 return PlacementOffset.success(pos.relative(dir), s -> s.setValue(DrillHeadBlock.FACING, dir));
             return PlacementOffset.fail();
+        }
+
+        @Override
+        public void renderAt(BlockPos pos, BlockState state, BlockHitResult ray, PlacementOffset offset) {
+            if (!offset.hasGhostState())
+                return;
+            CreateClient.GHOST_BLOCKS.showGhostState(this, offset.getTransform().apply(offset.getGhostState()))
+                    .at(offset.getBlockPos())
+                    .breathingAlpha();
         }
     }
 }

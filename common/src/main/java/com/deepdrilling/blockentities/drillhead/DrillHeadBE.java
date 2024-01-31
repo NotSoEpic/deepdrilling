@@ -25,14 +25,18 @@ public class DrillHeadBE extends KineticBlockEntity {
         super(typeIn, pos, state);
     }
 
-    public void applyDamage(double amount) {
-        damage += amount;
+    public void setDamage(double amount) {
+        damage = amount;
         if (damage >= getMaxDamage()) {
             level.destroyBlock(getBlockPos(), false);
             return;
         }
         setChanged();
         sendData();
+    }
+
+    public void applyDamage(double amount) {
+        setDamage(damage + amount);
     }
 
     public double getMaxDamage() {
@@ -47,8 +51,12 @@ public class DrillHeadBE extends KineticBlockEntity {
 
     public ItemStack setItemDamage(ItemStack item) {
         CompoundTag tag = item.getOrCreateTag();
-        tag.putDouble("Damage", damage);
+        tag.putInt("Damage", (int)damage);
         return item;
+    }
+
+    public void applyItemDamage(ItemStack item) {
+        setDamage(item.getOrCreateTag().getInt("Damage"));
     }
 
     @Override
@@ -97,15 +105,17 @@ public class DrillHeadBE extends KineticBlockEntity {
         }
     }
 
+    public static String DAMAGE_KEY = "Damage";
+
     @Override
     protected void read(CompoundTag compound, boolean clientPacket) {
         super.read(compound, clientPacket);
-        damage = compound.getDouble("Durability");
+        damage = compound.getDouble(DAMAGE_KEY);
     }
 
     @Override
     protected void write(CompoundTag compound, boolean clientPacket) {
         super.write(compound, clientPacket);
-        compound.putDouble("Durability", damage);
+        compound.putDouble(DAMAGE_KEY, damage);
     }
 }

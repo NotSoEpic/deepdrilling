@@ -14,23 +14,28 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MaterialColor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.simibubi.create.foundation.data.TagGen.axeOrPickaxe;
+
 public class DDrillHeads {
     private static final List<BlockEntry<DrillHeadBlock>> knownDrillHeads = new ArrayList<>();
     public static final Map<ResourceLocation, PartialModel> partialModels = new HashMap<>();
 
     // only this stuff should need to be touched
-    public static final BlockEntry<DrillHeadBlock> ANDESITE, BRASS;
+    public static final BlockEntry<DrillHeadBlock> ANDESITE, BRASS, COPPER;
     static {
         ANDESITE = createDrillHead("andesite_drill_head", 100, 1);
         BRASS = createDrillHead("brass_drill_head", 500, 0.8);
+        COPPER = createDrillHead("copper_drill_head", 200, 0.5);
     }
 
     // cursed java below this line to make the stuff above the line all nice and clean looking :3
@@ -39,15 +44,17 @@ public class DDrillHeads {
         BlockEntry<DrillHeadBlock> block = DrillMod.REGISTRATE
                 .block(blockID, DrillHeadBlock::new)
                 .addLayer(() -> RenderType::cutout)
+                .properties(p ->  p.color(MaterialColor.STONE))
                 .properties(BlockBehaviour.Properties::noOcclusion)
+                .transform(axeOrPickaxe())
                 .transform(DrillHeadStats.setDurability(durability))
                 .transform(DrillHeadStats.setSpeedModifier(speedModifier))
-                .item()
+                .item(DrillHeadItem::new)
                 .properties(p -> p.durability((int) durability))
+                // .properties(p -> p.tab(DrillMod.CREATIVE_TAB))
                 .build()
                 .register();
         knownDrillHeads.add(block);
-        // getPartialModel(new ResourceLocation(DrillMod.REGISTRATE.getModid(), blockID)); // partial model needs to be registered *early*
         getPartialModel(block.getId());
         return block;
     }
