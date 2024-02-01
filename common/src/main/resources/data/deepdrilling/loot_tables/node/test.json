@@ -1,0 +1,43 @@
+{
+ "type": "minecraft:empty",
+ "pools": [
+  {
+   "entries": [
+    {
+     "type": "minecraft:item",
+     "weight": 1,
+     "name": "minecraft:diamond",
+     "functions": [
+      {
+       "function": "minecraft:set_count",
+       "add": false,
+       "count": {
+        "min": 2,
+        "max": 3
+       }
+      }
+     ]
+    },
+    {
+     "type": "minecraft:item",
+     "weight": 4,
+     "name": "minecraft:dirt",
+     "functions": [
+      {
+       "function": "minecraft:set_count",
+       "add": false,
+       "count": {
+        "min": 5,
+        "max": 6
+       }
+      }
+     ]
+    }
+   ],
+   "rolls": {
+    "min": 2,
+    "max": 3
+   }
+  }
+ ]
+}

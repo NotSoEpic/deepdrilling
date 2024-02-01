@@ -29,7 +29,7 @@ public class CollectorModuleBE extends ModuleBE implements IDrillCollector, Cont
             long leftover = insert(stack);
             stack.setCount((int) leftover);
         });
-        items.stream().filter(stack -> !stack.isEmpty());
+        items = items.stream().filter(stack -> !stack.isEmpty()).toList();
         return items;
     }
 
@@ -41,7 +41,7 @@ public class CollectorModuleBE extends ModuleBE implements IDrillCollector, Cont
     public void givePlayerItems(Player player, Level level) {
         for (int i = 0; i < getContainerSize(); i++) {
             ItemStack item = getItem(i);
-            if (!player.addItem(item)) {
+            if (!player.addItem(item) && !item.isEmpty()) {
                 ItemEntity itemEntity = new ItemEntity(level, player.getX(), player.getY(), player.getZ(), item.copy());
                 itemEntity.setDeltaMovement(Vec3.ZERO);
                 itemEntity.setDefaultPickUpDelay();
