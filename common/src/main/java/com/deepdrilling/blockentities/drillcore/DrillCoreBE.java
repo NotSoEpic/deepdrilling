@@ -1,11 +1,16 @@
 package com.deepdrilling.blockentities.drillcore;
 
-import com.deepdrilling.blockentities.*;
+import com.deepdrilling.DrillHeadStats;
+import com.deepdrilling.blockentities.IDrillCollector;
+import com.deepdrilling.blockentities.IDrillDamageMod;
+import com.deepdrilling.blockentities.IDrillSpeedMod;
+import com.deepdrilling.blockentities.IModule;
 import com.deepdrilling.blockentities.drillhead.DrillHeadBE;
+import com.deepdrilling.nodes.OreNode;
+import com.deepdrilling.nodes.OreNodes;
 import com.simibubi.create.content.kinetics.base.BlockBreakingKineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.LangBuilder;
 import com.simibubi.create.foundation.utility.LangNumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -13,14 +18,17 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -117,12 +125,20 @@ public class DrillCoreBE extends KineticBlockEntity {
                 getDrillHead() != null;
     }
 
+    public List<ItemStack> getDrops() {
+        OreNode node = OreNodes.get(level.getBlockState(breakingPos).getBlock());
+        DrillHeadStats.WeightMultipliers weights = drillHead.getWeightMultipliers().mul(node.weights);
+        OreNode.LOOT_TYPE type = weights.pick(level.random);
+
+        LootTable loot = node.getTable(level.getServer().getLootTables(), type);
+        LootContext.Builder builder = new LootContext.Builder((ServerLevel) level);
+        return loot.getRandomItems(builder.create(LootContextParamSets.EMPTY));
+    }
+
     public void mineBlock() {
         findModules();
 
-        List<ItemStack> drops = new ArrayList<>();
-
-        drops.add(Items.DIAMOND.getDefaultInstance());
+        List<ItemStack> drops = getDrops();
 
         for (Tuple<Integer, IDrillCollector> collectorInfo : collectors) {
             IDrillCollector collector = collectorInfo.getB();
@@ -254,9 +270,9 @@ public class DrillCoreBE extends KineticBlockEntity {
             modules.forEach(m -> m.progressBreaking(this));
             if (destroyProgress >= 10) {
                 destroyProgress = 0;
-                ifDrillHeadDo(drillHead -> drillHead.applyDamage(calculateDamage()));
                 modules.forEach(m -> m.blockBroken(this));
                 mineBlock();
+                ifDrillHeadDo(drillHead -> drillHead.applyDamage(calculateDamage()));
                 level.destroyBlockProgress(breakerId, breakingPos, -1);
             } else {
                 level.destroyBlockProgress(breakerId, breakingPos, destroyProgress);

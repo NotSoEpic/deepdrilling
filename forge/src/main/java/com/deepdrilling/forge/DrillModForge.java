@@ -7,12 +7,10 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(DrillMod.MOD_ID)
 public class DrillModForge {
-    public DrillModForge(IEventBus modBus) {
+    public DrillModForge() {
         // registrate must be given the mod event bus on forge before registration
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         DrillMod.REGISTRATE.registerEventListeners(eventBus);
         DrillMod.init();
-
-        modBus.addListener(DrillEvents::reloadListener);
     }
 }

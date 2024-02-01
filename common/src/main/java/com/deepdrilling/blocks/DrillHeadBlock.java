@@ -7,7 +7,6 @@ import com.deepdrilling.blockentities.drillhead.DrillHeadBE;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
-import com.simibubi.create.content.kinetics.simpleRelays.ShaftBlock;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.placement.IPlacementHelper;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
@@ -17,8 +16,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -32,7 +29,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -44,9 +40,7 @@ import java.util.function.Predicate;
 public class DrillHeadBlock extends DirectionalKineticBlock implements IBE<DrillHeadBE> {
 
     VoxelShaper SHAPE = new AllShapes.Builder(
-            Block.box(1, -1, 1, 15, 6, 15))
-            .add(Block.box(3, 6, 3, 13, 11, 13))
-            .add(Block.box(5, 11, 5, 11, 17, 11))
+            Block.box(1, -1, 1, 15, 17, 15))
             .forDirectional();
 
     public static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());

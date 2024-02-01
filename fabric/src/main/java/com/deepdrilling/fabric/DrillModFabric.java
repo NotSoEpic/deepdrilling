@@ -32,7 +32,7 @@ public class DrillModFabric implements ModInitializer {
 
             @Override
             public void onResourceManagerReload(ResourceManager manager) {
-                OreNodes.apply(manager);
+                OreNodes.doBoth(manager);
             }
         });
     }

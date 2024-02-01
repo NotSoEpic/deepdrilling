@@ -49,6 +49,11 @@ public class DrillHeadBE extends KineticBlockEntity {
         return DrillHeadStats.DRILL_SPEED_MODIFIERS.getOrDefault(name, 1.0);
     }
 
+    public DrillHeadStats.WeightMultipliers getWeightMultipliers() {
+        ResourceLocation name = Registry.BLOCK.getKey(getBlockState().getBlock());
+        return DrillHeadStats.LOOT_WEIGHT_MULTIPLIER.getOrDefault(name, DrillHeadStats.WeightMultipliers.ONE);
+    }
+
     public ItemStack setItemDamage(ItemStack item) {
         CompoundTag tag = item.getOrCreateTag();
         tag.putInt("Damage", (int)damage);

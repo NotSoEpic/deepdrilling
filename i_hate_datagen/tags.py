@@ -16,6 +16,8 @@ class Tag:
 
         if values is None:
             values = set()
+        if isinstance(values, list):
+            values = set(values)
         self.key = Resource(key)
         self.values = values
         to_add[key] = self

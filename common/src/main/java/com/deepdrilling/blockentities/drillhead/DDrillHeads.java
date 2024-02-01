@@ -2,9 +2,6 @@ package com.deepdrilling.blockentities.drillhead;
 
 import com.deepdrilling.DrillHeadStats;
 import com.deepdrilling.DrillMod;
-import com.deepdrilling.blockentities.drillhead.DrillHeadBE;
-import com.deepdrilling.blockentities.drillhead.DrillHeadInstance;
-import com.deepdrilling.blockentities.drillhead.DrillHeadRenderer;
 import com.deepdrilling.blocks.DrillHeadBlock;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.foundation.data.CreateBlockEntityBuilder;
@@ -14,7 +11,6 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MaterialColor;
@@ -33,14 +29,15 @@ public class DDrillHeads {
     // only this stuff should need to be touched
     public static final BlockEntry<DrillHeadBlock> ANDESITE, BRASS, COPPER;
     static {
-        ANDESITE = createDrillHead("andesite_drill_head", 100, 1);
-        BRASS = createDrillHead("brass_drill_head", 500, 0.8);
-        COPPER = createDrillHead("copper_drill_head", 200, 0.5);
+        ANDESITE = createDrillHead("andesite_drill_head", 100, 1, 1.5, 1, 0.5);
+        BRASS = createDrillHead("brass_drill_head", 500, 0.8, 0, 1, 1);
+        COPPER = createDrillHead("copper_drill_head", 200, 0.5, 1, 0, 0);
     }
 
     // cursed java below this line to make the stuff above the line all nice and clean looking :3
     public static BlockEntityEntry<DrillHeadBE> DRILL_HEAD_BE;
-    public static BlockEntry<DrillHeadBlock> createDrillHead(String blockID, double durability, double speedModifier) {
+    public static BlockEntry<DrillHeadBlock> createDrillHead(String blockID, double durability, double speedModifier,
+                                                             double earthWeight, double commonWeight, double rareWeight) {
         BlockEntry<DrillHeadBlock> block = DrillMod.REGISTRATE
                 .block(blockID, DrillHeadBlock::new)
                 .addLayer(() -> RenderType::cutout)
@@ -49,6 +46,7 @@ public class DDrillHeads {
                 .transform(axeOrPickaxe())
                 .transform(DrillHeadStats.setDurability(durability))
                 .transform(DrillHeadStats.setSpeedModifier(speedModifier))
+                .transform(DrillHeadStats.setLootWeightMultiplier(earthWeight, commonWeight, rareWeight))
                 .item(DrillHeadItem::new)
                 .properties(p -> p.durability((int) durability))
                 // .properties(p -> p.tab(DrillMod.CREATIVE_TAB))

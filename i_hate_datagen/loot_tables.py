@@ -18,7 +18,7 @@ class Table:
             values = [values]
         self.key = Resource(key)
         self.values: list[loot_pools.Pool] = values
-        to_add[key] = self
+        to_add[self.key] = self
 
     def add(self, values):
         if values is loot_pools.Pool:
@@ -27,6 +27,7 @@ class Table:
 
 
 def add(key, values):
+    key = Resource(key)
     if key in to_add:
         to_add[key].add(values)
         return to_add[key]
