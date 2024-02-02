@@ -6,6 +6,8 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTables;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class OreNode {
     public static OreNode EMPTY = new OreNode("", "", "", WeightMultipliers.ZERO);
     String earthTable;
@@ -40,6 +42,11 @@ public class OreNode {
 
     public boolean hasTable(LootTables tables, LOOT_TYPE type) {
         return getTable(tables, type) != LootTable.EMPTY;
+    }
+
+    public boolean hasTables() {
+        return (!Objects.equals(earthTable, "") || !Objects.equals(commonTable, "") || !Objects.equals(rareTable, ""))
+                && !weights.isZero();
     }
 
     public enum LOOT_TYPE {

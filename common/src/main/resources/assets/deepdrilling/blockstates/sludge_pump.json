@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "deepdrilling:block/sludge_pump",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "deepdrilling:block/sludge_pump"
+    },
+    "facing=north": {
+      "model": "deepdrilling:block/sludge_pump",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "deepdrilling:block/sludge_pump",
+      "x": 90,
+      "y": 90
+    },
+    "facing=south": {
+      "model": "deepdrilling:block/sludge_pump",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "deepdrilling:block/sludge_pump",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

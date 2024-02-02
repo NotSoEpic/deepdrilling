@@ -1,19 +1,32 @@
 package com.deepdrilling;
 
 import com.deepdrilling.nodes.OreNode;
+import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DrillHeadStats {
     public static final Map<ResourceLocation, Double> DRILL_DURABILITY = new HashMap<>();
     public static final Map<ResourceLocation, Double> DRILL_SPEED_MODIFIERS = new HashMap<>();
     public static final Map<ResourceLocation, WeightMultipliers> LOOT_WEIGHT_MULTIPLIER = new HashMap<>();
+
+    public static double getDrillDurability(ResourceLocation drill) {
+        return DRILL_DURABILITY.getOrDefault(drill, 100.0);
+    }
+    public static double getDrillSpeedModifier(ResourceLocation drill) {
+        return DRILL_SPEED_MODIFIERS.getOrDefault(drill, 1.0);
+    }
+    public static WeightMultipliers getLootWeightMultiplier(ResourceLocation drill) {
+        return LOOT_WEIGHT_MULTIPLIER.getOrDefault(drill, WeightMultipliers.ONE);
+    }
 
     public static <B extends Block, P>NonNullUnaryOperator<BlockBuilder<B, P>> setDurability(double value) {
         return b -> {
@@ -56,6 +69,13 @@ public class DrillHeadStats {
             this.rare = rare;
         }
 
+        public boolean isZero() {
+            return earth <= 0 && common <= 0 && rare <= 0;
+        }
+        public boolean isOne() {
+            return earth == 1 && common == 1 && rare == 1;
+        }
+
         public WeightMultipliers mul(WeightMultipliers other) {
             return new WeightMultipliers(
                     this.earth * other.earth,
@@ -77,6 +97,30 @@ public class DrillHeadStats {
             if (choice > commonThresh)
                 return OreNode.LOOT_TYPE.COMMON;
             return OreNode.LOOT_TYPE.EARTH;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj instanceof WeightMultipliers other) {
+                return this.earth == other.earth && this.common == other.common && this.rare == other.rare;
+            }
+            return false;
+        }
+
+        public void addTooltip(List<Component> list, boolean hasGoggles, boolean showRedundant) {
+            if (showRedundant || earth != 1)
+                addCollectionModifier(list, earth, hasGoggles, "Junk");
+            if (showRedundant || common != 1)
+                addCollectionModifier(list, common, hasGoggles, "Common");
+            if (showRedundant || rare != 1)
+                addCollectionModifier(list, rare, hasGoggles, "Precious");
+        }
+
+        private static void addCollectionModifier(List<Component> list, double mod, boolean goggles, String name) {
+            Lang.builder().add(Lang.text(DrillHeadTooltips.makeMultiplier(mod, goggles, name))
+                    .style(DrillHeadTooltips.mulColor(mod))).addTo(list);
         }
     }
 }

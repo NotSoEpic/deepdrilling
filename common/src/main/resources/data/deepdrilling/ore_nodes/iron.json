@@ -1,8 +1,8 @@
 {
   "block": "minecraft:iron_ore",
   "loot_tables": {
-    "earth": "deepdrilling:ore_nodes/iron/earth",
-    "common": "deepdrilling:ore_nodes/iron/common",
-    "rare": "deepdrilling:ore_nodes/iron/rare"
+    "earth": "deepdrilling:ore_nodes/crimsite/earth",
+    "common": "deepdrilling:ore_nodes/crimsite/common",
+    "rare": "deepdrilling:ore_nodes/crimsite/rare"
   }
 }

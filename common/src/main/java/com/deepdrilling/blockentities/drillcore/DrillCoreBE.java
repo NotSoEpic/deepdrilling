@@ -1,10 +1,7 @@
 package com.deepdrilling.blockentities.drillcore;
 
 import com.deepdrilling.DrillHeadStats;
-import com.deepdrilling.blockentities.IDrillCollector;
-import com.deepdrilling.blockentities.IDrillDamageMod;
-import com.deepdrilling.blockentities.IDrillSpeedMod;
-import com.deepdrilling.blockentities.IModule;
+import com.deepdrilling.blockentities.*;
 import com.deepdrilling.blockentities.drillhead.DrillHeadBE;
 import com.deepdrilling.nodes.OreNode;
 import com.deepdrilling.nodes.OreNodes;
@@ -49,6 +46,7 @@ public class DrillCoreBE extends KineticBlockEntity {
     protected List<Tuple<Integer, IDrillSpeedMod>> speedModifiers = new ArrayList<>();
     protected List<Tuple<Integer, IDrillCollector>> collectors = new ArrayList<>();
     protected List<Tuple<Integer, IDrillDamageMod>> drillDamagers = new ArrayList<>();
+    protected List<Tuple<Integer, IResourceWeightMod>> weightMods = new ArrayList<>();
 
     public DrillCoreBE(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -99,6 +97,14 @@ public class DrillCoreBE extends KineticBlockEntity {
         return Math.max(damage, 0);
     }
 
+    public DrillHeadStats.WeightMultipliers getWeightMultipliers() {
+        DrillHeadStats.WeightMultipliers base = DrillHeadStats.WeightMultipliers.ONE;
+        for (Tuple<Integer, IResourceWeightMod> weightMod : weightMods) {
+            base = base.mul(weightMod.getB().getWeightMultiplier());
+        }
+        return base;
+    }
+
     public int ticksPerProgress() {
         double speed = calculateSpeed();
         if (speed < 0)
@@ -122,12 +128,14 @@ public class DrillCoreBE extends KineticBlockEntity {
     public boolean canDrill(BlockState state) {
         return !state.getMaterial().isLiquid() &&
                 !state.isAir() &&
-                getDrillHead() != null;
+                getDrillHead() != null &&
+                OreNodes.get(state.getBlock()).hasTables();
     }
 
     public List<ItemStack> getDrops() {
         OreNode node = OreNodes.get(level.getBlockState(breakingPos).getBlock());
         DrillHeadStats.WeightMultipliers weights = drillHead.getWeightMultipliers().mul(node.weights);
+        weights = weights.mul(getWeightMultipliers());
         OreNode.LOOT_TYPE type = weights.pick(level.random);
 
         LootTable loot = node.getTable(level.getServer().getLootTables(), type);
@@ -165,6 +173,7 @@ public class DrillCoreBE extends KineticBlockEntity {
         speedModifiers.clear();
         collectors.clear();
         drillDamagers.clear();
+        weightMods.clear();
 
         for (int i = 0; i < searchDist; i++) {
             pos.move(dir);
@@ -172,6 +181,12 @@ public class DrillCoreBE extends KineticBlockEntity {
 
             if (candidate instanceof IModule module &&
                     module.getAxis() == getBlockState().getValue(com.deepdrilling.blocks.DrillCore.FACING).getAxis()) {
+                if (candidate instanceof IUniqueMod uniqueMod) {
+                    if (modules.stream().anyMatch(mod -> mod instanceof IUniqueMod uniqueMod2 &&
+                            (uniqueMod2.getIdentifier()).equals(uniqueMod.getIdentifier()))) {
+                        continue;
+                    }
+                }
                 modules.add(module);
                 if (candidate instanceof IDrillSpeedMod speedMod) {
                     speedModifiers.add(new Tuple<>(i, speedMod));
@@ -181,6 +196,9 @@ public class DrillCoreBE extends KineticBlockEntity {
                 }
                 if (candidate instanceof IDrillDamageMod damager) {
                     drillDamagers.add(new Tuple<>(i, damager));
+                }
+                if (candidate instanceof IResourceWeightMod weighter) {
+                    weightMods.add(new Tuple<>(i, weighter));
                 }
             } else {
                 break;

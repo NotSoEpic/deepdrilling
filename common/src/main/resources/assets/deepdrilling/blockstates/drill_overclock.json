@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "deepdrilling:block/overclock_module",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "deepdrilling:block/overclock_module"
+    },
+    "facing=north": {
+      "model": "deepdrilling:block/overclock_module",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "deepdrilling:block/overclock_module",
+      "x": 90,
+      "y": 90
+    },
+    "facing=south": {
+      "model": "deepdrilling:block/overclock_module",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "deepdrilling:block/overclock_module",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

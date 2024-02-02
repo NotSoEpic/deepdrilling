@@ -68,8 +68,6 @@ public class DrillHeadBE extends KineticBlockEntity {
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
-        Lang.text("Drill Stats:").style(ChatFormatting.WHITE).forGoggles(tooltip);
-
         Lang.text("Head Durability:").style(ChatFormatting.GRAY).forGoggles(tooltip);
         double fractDamage = damage / getMaxDamage();
         ChatFormatting formatting;

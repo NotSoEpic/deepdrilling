@@ -1,5 +1,8 @@
-package com.deepdrilling.blockentities;
+package com.deepdrilling.blockentities.overclock;
 
+import com.deepdrilling.blockentities.IDrillDamageMod;
+import com.deepdrilling.blockentities.IDrillSpeedMod;
+import com.deepdrilling.blockentities.ModuleBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;

@@ -2,8 +2,8 @@ package com.deepdrilling;
 
 import com.deepdrilling.blocks.CollectorModuleBlock;
 import com.deepdrilling.blocks.DrillCore;
-import com.deepdrilling.blocks.DrillHeadBlock;
 import com.deepdrilling.blocks.OverclockModuleBlock;
+import com.deepdrilling.blocks.SludgePumpModuleBlock;
 import com.simibubi.create.content.kinetics.BlockStressDefaults;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.ModelGen;
@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MaterialColor;
 
 import static com.simibubi.create.foundation.data.TagGen.axeOrPickaxe;
+import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
 public class DBlocks {
 	/**
@@ -41,6 +42,7 @@ public class DBlocks {
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(axeOrPickaxe())
 			.lang("Collection Filter")
+			.transform(BlockStressDefaults.setImpact(2))
 			.item()
 			//.properties(p -> p.tab(DrillMod.CREATIVE_TAB))
 			.transform(ModelGen.customItemModel())
@@ -48,13 +50,24 @@ public class DBlocks {
 
 	public static final BlockEntry<OverclockModuleBlock> DRILL_OVERCLOCK = DrillMod.REGISTRATE
 			.block("drill_overclock", OverclockModuleBlock::new)
+			.addLayer(() -> RenderType::cutout)
 			.lang("Drill Overclock")
 			.properties(p ->  p.color(MaterialColor.PODZOL))
 			.properties(BlockBehaviour.Properties::noOcclusion)
-			.transform(axeOrPickaxe())
+			.transform(pickaxeOnly())
+			.transform(BlockStressDefaults.setImpact(8))
 			.item()
 			//.properties(p -> p.tab(DrillMod.CREATIVE_TAB))
 			.transform(ModelGen.customItemModel())
+			.register();
+
+	public static final BlockEntry<SludgePumpModuleBlock> SLUDGE_PUMP = DrillMod.REGISTRATE
+			.block("sludge_pump", SludgePumpModuleBlock::new)
+			.properties(p -> p.color(MaterialColor.PODZOL))
+			.properties(BlockBehaviour.Properties::noOcclusion)
+			.transform(axeOrPickaxe())
+			.transform(BlockStressDefaults.setImpact(4))
+			.simpleItem()
 			.register();
 
 	public static void init() {

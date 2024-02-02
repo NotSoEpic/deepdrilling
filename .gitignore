@@ -18,4 +18,4 @@ classes/
 .settings
 *.launch
 
-common/src/generated
+generated/
