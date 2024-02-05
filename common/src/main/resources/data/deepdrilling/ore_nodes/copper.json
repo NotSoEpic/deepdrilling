@@ -1,0 +1,8 @@
+{
+  "block": "deepdrilling:veridium_node",
+  "loot_tables": {
+    "earth": "deepdrilling:ore_nodes/veridium/earth",
+    "common": "deepdrilling:ore_nodes/veridium/common",
+    "rare": "deepdrilling:ore_nodes/veridium/rare"
+  }
+}

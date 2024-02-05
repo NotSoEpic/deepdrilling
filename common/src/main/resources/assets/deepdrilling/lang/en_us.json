@@ -6,5 +6,10 @@
 
 	"block.deepdrilling.andesite_drill_head": "Andesite Drill Head",
 	"block.deepdrilling.brass_drill_head": "Brass Drill Head",
-	"block.deepdrilling.copper_drill_head": "Copper Drill Head"
+	"block.deepdrilling.copper_drill_head": "Copper Drill Head",
+
+	"block.deepdrilling.asurine_node": "Asurine Node",
+	"block.deepdrilling.crimsite_node": "Crimsite Node",
+	"block.deepdrilling.ochrum_node": "Ochrum Node",
+	"block.deepdrilling.veridium_node": "Veridium Node"
 }

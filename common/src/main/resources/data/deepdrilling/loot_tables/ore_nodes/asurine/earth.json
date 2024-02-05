@@ -6,7 +6,7 @@
     {
      "type": "minecraft:item",
      "weight": 2,
-     "name": "create:crimsite",
+     "name": "create:asurine",
      "functions": [
       {
        "function": "minecraft:set_count",
@@ -51,7 +51,7 @@
     {
      "type": "minecraft:item",
      "weight": 2,
-     "name": "create:limestone",
+     "name": "minecraft:calcite",
      "functions": [
       {
        "function": "minecraft:set_count",

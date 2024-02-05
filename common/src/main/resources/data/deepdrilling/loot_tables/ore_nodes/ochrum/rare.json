@@ -6,59 +6,44 @@
     {
      "type": "minecraft:item",
      "weight": 2,
-     "name": "create:crimsite",
+     "name": "minecraft:deepslate_gold_ore",
      "functions": [
       {
        "function": "minecraft:set_count",
        "add": false,
        "count": {
-        "min": 2,
-        "max": 3
+        "min": 1,
+        "max": 2
        }
       }
      ]
     },
     {
      "type": "minecraft:item",
-     "weight": 2,
-     "name": "minecraft:tuff",
+     "weight": 1,
+     "name": "minecraft:raw_gold",
      "functions": [
       {
        "function": "minecraft:set_count",
        "add": false,
        "count": {
-        "min": 3,
-        "max": 4
+        "min": 1,
+        "max": 2
        }
       }
      ]
     },
     {
      "type": "minecraft:item",
-     "weight": 2,
-     "name": "minecraft:deepslate",
+     "weight": 1,
+     "name": "minecraft:quartz",
      "functions": [
       {
        "function": "minecraft:set_count",
        "add": false,
        "count": {
-        "min": 3,
-        "max": 4
-       }
-      }
-     ]
-    },
-    {
-     "type": "minecraft:item",
-     "weight": 2,
-     "name": "create:limestone",
-     "functions": [
-      {
-       "function": "minecraft:set_count",
-       "add": false,
-       "count": {
-        "min": 3,
-        "max": 4
+        "min": 1,
+        "max": 2
        }
       }
      ]

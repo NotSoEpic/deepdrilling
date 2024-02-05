@@ -1,0 +1,8 @@
+{
+  "block": "deepdrilling:asurine_node",
+  "loot_tables": {
+    "earth": "deepdrilling:ore_nodes/asurine/earth",
+    "common": "deepdrilling:ore_nodes/asurine/common",
+    "rare": "deepdrilling:ore_nodes/asurine/rare"
+  }
+}

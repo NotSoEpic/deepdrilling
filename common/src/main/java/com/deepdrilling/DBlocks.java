@@ -1,15 +1,13 @@
 package com.deepdrilling;
 
-import com.deepdrilling.blocks.CollectorModuleBlock;
-import com.deepdrilling.blocks.DrillCore;
-import com.deepdrilling.blocks.OverclockModuleBlock;
-import com.deepdrilling.blocks.SludgePumpModuleBlock;
+import com.deepdrilling.blocks.*;
 import com.simibubi.create.content.kinetics.BlockStressDefaults;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MaterialColor;
 
@@ -67,6 +65,27 @@ public class DBlocks {
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(axeOrPickaxe())
 			.transform(BlockStressDefaults.setImpact(4))
+			.simpleItem()
+			.register();
+
+	public static final BlockEntry<OreNodeBlock> CRIMSITE_NODE = DrillMod.REGISTRATE
+			.block("crimsite_node", OreNodeBlock::new)
+			.initialProperties(() -> Blocks.BEDROCK)
+			.simpleItem()
+			.register(),
+	ASURINE_NODE = DrillMod.REGISTRATE
+			.block("asurine_node", OreNodeBlock::new)
+			.initialProperties(() -> Blocks.BEDROCK)
+			.simpleItem()
+			.register(),
+	OCHRUM_NODE = DrillMod.REGISTRATE
+			.block("ochrum_node", OreNodeBlock::new)
+			.initialProperties(() -> Blocks.BEDROCK)
+			.simpleItem()
+			.register(),
+	VERIDIUM_NODE = DrillMod.REGISTRATE
+			.block("veridium_node", OreNodeBlock::new)
+			.initialProperties(() -> Blocks.BEDROCK)
 			.simpleItem()
 			.register();
 

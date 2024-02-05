@@ -1,0 +1,8 @@
+{
+  "block": "deepdrilling:ochrum_node",
+  "loot_tables": {
+    "earth": "deepdrilling:ore_nodes/ochrum/earth",
+    "common": "deepdrilling:ore_nodes/ochrum/common",
+    "rare": "deepdrilling:ore_nodes/ochrum/rare"
+  }
+}

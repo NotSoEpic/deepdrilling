@@ -33,6 +33,7 @@ public class DrillModFabric implements ModInitializer {
         // on fabric, Registrates must be explicitly finalized and registered.
         DrillMod.REGISTRATE.register();
         registerReloadListeners();
+        OreNodeManager.init();
     }
 
     private void registerReloadListeners() {

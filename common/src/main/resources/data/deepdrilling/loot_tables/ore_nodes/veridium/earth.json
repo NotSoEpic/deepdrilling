@@ -6,7 +6,7 @@
     {
      "type": "minecraft:item",
      "weight": 2,
-     "name": "create:crimsite",
+     "name": "create:veridium",
      "functions": [
       {
        "function": "minecraft:set_count",
@@ -36,7 +36,7 @@
     {
      "type": "minecraft:item",
      "weight": 2,
-     "name": "minecraft:deepslate",
+     "name": "minecraft:andesite",
      "functions": [
       {
        "function": "minecraft:set_count",
@@ -51,7 +51,7 @@
     {
      "type": "minecraft:item",
      "weight": 2,
-     "name": "create:limestone",
+     "name": "minecraft:smooth_basalt",
      "functions": [
       {
        "function": "minecraft:set_count",
