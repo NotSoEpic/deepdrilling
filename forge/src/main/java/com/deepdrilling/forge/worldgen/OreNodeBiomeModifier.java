@@ -19,6 +19,6 @@ public record OreNodeBiomeModifier(HolderSet<Biome> biomes, Holder<PlacedFeature
 
     @Override
     public Codec<? extends BiomeModifier> codec() {
-        return OreNodeManager.EXAMPLE_CODEC.get();
+        return OreNodeManager.ORE_NODE_CODEC.get();
     }
 }

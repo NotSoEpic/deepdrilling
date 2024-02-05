@@ -1,0 +1,5 @@
+{
+  "type": "deepdrilling:ore_node",
+  "biomes": "#minecraft:is_overworld",
+  "feature": "deepdrilling:crimsite_node"
+}

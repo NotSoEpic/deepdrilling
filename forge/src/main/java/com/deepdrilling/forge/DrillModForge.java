@@ -1,6 +1,7 @@
 package com.deepdrilling.forge;
 
 import com.deepdrilling.DrillMod;
+import com.deepdrilling.forge.worldgen.OreNodeManager;
 import com.mojang.serialization.Codec;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
@@ -15,8 +16,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod(DrillMod.MOD_ID)
 public class DrillModForge {
-    public static DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS =
-            DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, "deepdrilling");
 
 
     public DrillModForge() {
@@ -31,5 +30,6 @@ public class DrillModForge {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         DrillMod.REGISTRATE.registerEventListeners(eventBus);
         DrillMod.init();
+        OreNodeManager.init(eventBus);
     }
 }

@@ -1,4 +1,4 @@
-package com.deepdrilling.nodes;
+package com.deepdrilling.worldgen;
 
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
@@ -51,7 +51,7 @@ public class ConfiguredNodeBuilder {
     public FeatureData configureFeature() {
         ConfiguredFeature<OreNodeConfiguration, OreNodeFeature> CONFIGURED_FEATURE =
                 new ConfiguredFeature<>(
-                        OreNodeCommon.ORE_NODE, new OreNodeConfiguration(oreNode, ores, layers)
+                        OreNodes.ORE_NODE, new OreNodeConfiguration(oreNode, ores, layers)
                 );
 
         PlacedFeature PLACED_FEATURE = new PlacedFeature(

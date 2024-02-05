@@ -1,4 +1,4 @@
-package com.deepdrilling.nodes;
+package com.deepdrilling.worldgen;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
