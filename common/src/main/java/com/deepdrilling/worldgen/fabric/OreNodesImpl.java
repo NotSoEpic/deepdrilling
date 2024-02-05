@@ -7,16 +7,18 @@ import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 
 public class OreNodesImpl {
-    public static void register(ConfiguredNodeBuilder.FeatureData data, ResourceLocation name) {
+    public static void register(ConfiguredNodeBuilder.FeatureData data, ResourceLocation name, TagKey<Biome> filterTag) {
         Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, name, data.configured());
         Registry.register(BuiltinRegistries.PLACED_FEATURE, name, data.placed());
 
         BiomeModifications.addFeature(
-                BiomeSelectors.foundInOverworld(),
-                GenerationStep.Decoration.VEGETAL_DECORATION,
+                BiomeSelectors.foundInOverworld().and(BiomeSelectors.tag(filterTag)),
+                GenerationStep.Decoration.UNDERGROUND_ORES,
                 ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, name)
         );
     }

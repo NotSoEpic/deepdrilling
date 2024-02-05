@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#c:climate_dry",
+      "required": false
+    },
+    {
+      "id": "#forge:is_dry/overworld",
+      "required": false
+    }
+  ]
+}

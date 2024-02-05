@@ -1,5 +1,5 @@
 {
   "type": "deepdrilling:ore_node",
-  "biomes": "#minecraft:is_overworld",
+  "biomes": "#deepdrilling:veridium_node",
   "feature": "deepdrilling:veridium_node"
 }

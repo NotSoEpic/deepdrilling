@@ -7,7 +7,9 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.RarityFilter;
 
 import java.util.ArrayList;
@@ -47,17 +49,23 @@ public class ConfiguredNodeBuilder {
     public ConfiguredNodeBuilder addLayer(NonNullSupplier<Block> layer) {
         return addLayer(Registry.BLOCK.getKey(layer.get()));
     }
+    public ConfiguredNodeBuilder addLayer(Block layer) {
+        return addLayer(Registry.BLOCK.getKey(layer));
+    }
 
-    public FeatureData configureFeature() {
+    public FeatureData configureFeature(List<PlacementModifier> filters) {
         ConfiguredFeature<OreNodeConfiguration, OreNodeFeature> CONFIGURED_FEATURE =
                 new ConfiguredFeature<>(
                         OreNodes.ORE_NODE, new OreNodeConfiguration(oreNode, ores, layers)
                 );
 
         PlacedFeature PLACED_FEATURE = new PlacedFeature(
-                Holder.direct(CONFIGURED_FEATURE),
-                List.of(RarityFilter.onAverageOnceEvery(10))
+                Holder.direct(CONFIGURED_FEATURE), filters
         );
         return new FeatureData(CONFIGURED_FEATURE, PLACED_FEATURE);
+    }
+
+    public FeatureData configureFeature(int odds) {
+        return configureFeature(List.of(RarityFilter.onAverageOnceEvery(odds), InSquarePlacement.spread()));
     }
 }

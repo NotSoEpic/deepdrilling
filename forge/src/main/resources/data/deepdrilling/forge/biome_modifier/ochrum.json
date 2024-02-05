@@ -1,5 +1,5 @@
 {
   "type": "deepdrilling:ore_node",
-  "biomes": "#minecraft:is_overworld",
+  "biomes": "#deepdrilling:ochrum_node",
   "feature": "deepdrilling:ochrum_node"
 }
