@@ -5,7 +5,7 @@
 		"0": "deepdrilling:block/deep_drill",
 		"1": "create:block/axis_top",
 		"2": "create:block/axis",
-		"particle": "create:block/brass_casing"
+		"particle": "deepdrilling:block/deep_drill"
 	},
 	"elements": [
 		{
@@ -91,12 +91,12 @@
 		},
 		{
 			"name": "wiresA",
-			"from": [14, 12, 2],
-			"to": [14, 14, 12],
-			"rotation": {"angle": 22.5, "axis": "z", "origin": [14, 14, 7]},
+			"from": [3, 12, 2],
+			"to": [13, 14, 2],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 14, 2]},
 			"faces": {
-				"east": {"uv": [0.75, 7.5, 3.25, 7], "texture": "#0"},
-				"west": {"uv": [0.75, 7, 3.25, 7.5], "rotation": 180, "texture": "#0"}
+				"north": {"uv": [0.75, 7, 3.25, 7.5], "rotation": 180, "texture": "#0"},
+				"south": {"uv": [0.75, 7.5, 3.25, 7], "texture": "#0"}
 			}
 		},
 		{
@@ -117,40 +117,6 @@
 			"faces": {
 				"north": {"uv": [3.75, 7, 4.25, 9.25], "texture": "#0"},
 				"south": {"uv": [4.25, 7, 3.75, 9.25], "texture": "#0"}
-			}
-		},
-		{
-			"name": "pipeA",
-			"from": [14, 6, 12],
-			"to": [15, 8, 14],
-			"faces": {
-				"north": {"uv": [0, 10, 0.25, 10.5], "texture": "#0"},
-				"south": {"uv": [0, 11, 0.25, 11.5], "texture": "#0"},
-				"up": {"uv": [0, 10.5, 0.25, 11], "texture": "#0"}
-			}
-		},
-		{
-			"name": "pipeBomb",
-			"from": [15, 6, 12],
-			"to": [17, 15, 14],
-			"faces": {
-				"north": {"uv": [1.25, 10, 1.75, 12.25], "texture": "#0"},
-				"east": {"uv": [0.75, 10, 1.25, 12.25], "texture": "#0"},
-				"south": {"uv": [0.25, 10, 0.75, 12.25], "texture": "#0"},
-				"west": {"uv": [1.75, 10, 2.25, 12.25], "texture": "#0"},
-				"up": {"uv": [0.25, 12.25, 0.75, 12.75], "texture": "#0"},
-				"down": {"uv": [0.75, 12.25, 1.25, 12.75], "texture": "#0"}
-			}
-		},
-		{
-			"name": "pipeC",
-			"from": [14, 13, 12],
-			"to": [15, 15, 14],
-			"faces": {
-				"north": {"uv": [2.25, 10, 2.5, 10.5], "texture": "#0"},
-				"south": {"uv": [2.25, 11, 2.5, 11.5], "texture": "#0"},
-				"up": {"uv": [2.25, 10.5, 2.5, 11], "texture": "#0"},
-				"down": {"uv": [2.25, 11.5, 2.5, 12], "texture": "#0"}
 			}
 		},
 		{
@@ -224,14 +190,11 @@
 		7,
 		8,
 		9,
-		10,
-		11,
-		12,
 		{
 			"name": "shaft",
 			"origin": [8, 8, 8],
 			"color": 0,
-			"children": [13, 14]
+			"children": [10, 11]
 		}
 	]
 }
