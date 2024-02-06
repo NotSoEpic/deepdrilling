@@ -1,0 +1,18 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "ingredients": [
+  {
+   "item": "create:fluid_tank"
+  },
+  {
+   "item": "create:copper_casing"
+  },
+  {
+   "item": "create:mechanical_pump"
+  }
+ ],
+ "result": {
+  "item": "deepdrilling:sludge_pump",
+  "count": 1
+ }
+}

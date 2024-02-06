@@ -1,0 +1,6 @@
+{
+	"parent": "deepdrilling:item/base_incomplete_drill_head",
+	"textures": {
+		"0": "minecraft:block/copper_block"
+	}
+}

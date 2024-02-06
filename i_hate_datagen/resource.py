@@ -9,9 +9,13 @@ class Resource:
         if isinstance(namespace, Resource):
             self.namespace = namespace.namespace
             self.location = namespace.location
-        elif namespace.count(":") == 0 and location is not None:
-            self.namespace = namespace
-            self.location = location
+        elif namespace.count(":") == 0:
+            if location is None:
+                self.namespace = "minecraft"
+                self.location = namespace
+            else:
+                self.namespace = namespace
+                self.location = location
         elif namespace.count(":") == 1 and location is None:
             self.namespace = namespace.split(":")[0]
             self.location = namespace.split(":")[1]
@@ -26,3 +30,8 @@ class Resource:
 
     def __hash__(self):
         return hash(str(self))
+
+    def __eq__(self, other):
+        if isinstance(other, Resource):
+            return self.namespace == other.namespace and self.location == other.location
+        return str(self) == str(other)

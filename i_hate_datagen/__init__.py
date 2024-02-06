@@ -3,9 +3,30 @@
 from pathlib import Path
 
 from resource import Resource
-import tags, loot_tables, loot_pools
+from ingredient import Item, ItemTag
+import tags, loot_tables, loot_pools, recipes, assembly
 
 resources = Path("../common/src/generated/resources")
+
+
+def cr(location: str) -> Resource:
+    return Resource("create", location)
+
+
+def cri(location: str) -> Item | ItemTag:
+    if location[0] == "#":
+        return ItemTag(cr(location[1:]))
+    return Item(cr(location))
+
+
+def dd(location: str) -> Resource:
+    return Resource("deepdrilling", location)
+
+
+def ddi(location: str) -> Item | ItemTag:
+    if location[0] == "#":
+        return ItemTag(dd(location[1:]))
+    return Item(dd(location))
 
 
 def drill_head(block):
@@ -113,5 +134,35 @@ loot_tables.add(Resource("deepdrilling", "ore_nodes/veridium/rare"), loot_pools.
                 .add_item("minecraft:clay_ball", (3, 5), 1)
                 )
 
+recipes.Shaped(dd("drill_core"),
+               recipes.resultItem(dd("drill_core")),
+               [[cri("precision_mechanism"), cri("electron_tube"), cri("precision_mechanism")],
+                [cri("electron_tube"), cri("flywheel"), cri("electron_tube")],
+                [cri("precision_mechanism"), cri("brass_casing"), cri("precision_mechanism")]])
+
+recipes.Shaped(dd("andesite_drill_head"),
+               recipes.resultItem(dd("andesite_drill_head")),
+               [[None, cri("andesite_alloy"), None],
+                [cri("andesite_alloy"), Item("iron_ingot"), cri("andesite_alloy")],
+                [cri("industrial_iron_block"), cri("shaft"), cri("industrial_iron_block")]])
+recipes.Shapeless(dd("collection_filter"),
+                  recipes.resultItem(dd("collection_filter")),
+                  [cri("shaft"), cri("andesite_casing"), cri("andesite_funnel")])
+recipes.Shapeless(dd("drill_overclock"),
+                  recipes.resultItem(dd("drill_overclock")),
+                  [cri("cogwheel"), cri("brass_casing"), cri("precision_mechanism"), cri("electron_tube")])
+recipes.Shapeless(dd("sludge_pump"),
+                  recipes.resultItem(dd("sludge_pump")),
+                  [cri("fluid_tank"), cri("copper_casing"), cri("mechanical_pump")])
+
+assembly.Assembly(dd("copper_drill_head"), cri("industrial_iron_block"), ddi("incomplete_copper_drill_head"),
+                  [assembly.Deploying(cri("copper_sheet")), assembly.Cutting(), assembly.Pressing()],
+                  ddi("copper_drill_head"), 3)
+assembly.Assembly(dd("brass_drill_head"), cri("industrial_iron_block"), ddi("incomplete_brass_drill_head"),
+                  [assembly.Deploying(cri("brass_sheet")), assembly.Cutting(), assembly.Deploying(cri("sturdy_sheet")),
+                   assembly.Cutting(), assembly.Pressing()],
+                  ddi("brass_drill_head"), 5)
+
 tags.finalize(resources)
 loot_tables.finalize(resources)
+recipes.finalize(resources)

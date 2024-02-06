@@ -8,6 +8,9 @@
 	"block.deepdrilling.brass_drill_head": "Brass Drill Head",
 	"block.deepdrilling.copper_drill_head": "Copper Drill Head",
 
+	"item.deepdrilling.incomplete_brass_drill_head": "Incomplete Brass Drill Head",
+	"item.deepdrilling.incomplete_copper_drill_head": "Incomplete Copper Drill Head",
+
 	"block.deepdrilling.asurine_node": "Asurine Node",
 	"block.deepdrilling.crimsite_node": "Crimsite Node",
 	"block.deepdrilling.ochrum_node": "Ochrum Node",

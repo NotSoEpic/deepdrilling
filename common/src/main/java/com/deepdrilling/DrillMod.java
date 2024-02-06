@@ -5,6 +5,7 @@ import com.deepdrilling.worldgen.OreNodes;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,11 +15,16 @@ public class DrillMod {
     public static final Logger LOGGER = LoggerFactory.getLogger(NAME);
 
     public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(DrillMod.MOD_ID);
+    public static CreativeModeTab BASE_CREATIVE_TAB;
 
 
     public static void init() {
         LOGGER.info("{} initializing! Create version: {} on platform: {}", NAME, Create.VERSION, ExpectPlatform.platformName());
+
+        REGISTRATE.creativeModeTab(() -> BASE_CREATIVE_TAB);
+
         DBlocks.init(); // hold registrate in a separate class to avoid loading early on forge
+        DItems.init();
         DBlockEntities.init();
         DPartialModels.init();
 

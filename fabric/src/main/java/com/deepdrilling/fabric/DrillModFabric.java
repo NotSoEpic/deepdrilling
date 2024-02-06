@@ -1,5 +1,6 @@
 package com.deepdrilling.fabric;
 
+import com.deepdrilling.DrillCreativeTab;
 import com.deepdrilling.DrillHeadTooltips;
 import com.deepdrilling.DrillMod;
 import com.deepdrilling.ModuleStatTooltips;
@@ -10,6 +11,7 @@ import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
+import io.github.fabricators_of_create.porting_lib.util.ItemGroupUtil;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -26,6 +28,7 @@ public class DrillModFabric implements ModInitializer {
                 .andThen(TooltipModifier.mapNull(ModuleStatTooltips.create(item)))
         );
 
+        DrillMod.BASE_CREATIVE_TAB = new DrillCreativeTab(ItemGroupUtil.expandArrayAndGetId(), "deepdrilling.creative_tab");
         DrillMod.init();
         DrillMod.LOGGER.info(EnvExecutor.unsafeRunForDist(
                 () -> () -> "{} is accessing Porting Lib on a Fabric client!",

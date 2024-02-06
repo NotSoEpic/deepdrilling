@@ -1,0 +1,88 @@
+{
+ "type": "create:sequenced_assembly",
+ "ingredient": {
+  "item": "create:industrial_iron_block"
+ },
+ "transitionalItem": {
+  "item": "deepdrilling:incomplete_brass_drill_head"
+ },
+ "loops": 5,
+ "sequence": [
+  {
+   "type": "create:deploying",
+   "ingredients": [
+    {
+     "item": "deepdrilling:incomplete_brass_drill_head"
+    },
+    {
+     "item": "create:brass_sheet"
+    }
+   ],
+   "results": [
+    {
+     "item": "deepdrilling:incomplete_brass_drill_head"
+    }
+   ]
+  },
+  {
+   "type": "create:cutting",
+   "ingredients": [
+    {
+     "item": "deepdrilling:incomplete_brass_drill_head"
+    }
+   ],
+   "results": [
+    {
+     "item": "deepdrilling:incomplete_brass_drill_head"
+    }
+   ]
+  },
+  {
+   "type": "create:deploying",
+   "ingredients": [
+    {
+     "item": "deepdrilling:incomplete_brass_drill_head"
+    },
+    {
+     "item": "create:sturdy_sheet"
+    }
+   ],
+   "results": [
+    {
+     "item": "deepdrilling:incomplete_brass_drill_head"
+    }
+   ]
+  },
+  {
+   "type": "create:cutting",
+   "ingredients": [
+    {
+     "item": "deepdrilling:incomplete_brass_drill_head"
+    }
+   ],
+   "results": [
+    {
+     "item": "deepdrilling:incomplete_brass_drill_head"
+    }
+   ]
+  },
+  {
+   "type": "create:pressing",
+   "ingredients": [
+    {
+     "item": "deepdrilling:incomplete_brass_drill_head"
+    }
+   ],
+   "results": [
+    {
+     "item": "deepdrilling:incomplete_brass_drill_head"
+    }
+   ]
+  }
+ ],
+ "results": [
+  {
+   "item": "deepdrilling:brass_drill_head"
+  }
+ ]
+}
