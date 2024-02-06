@@ -100,12 +100,12 @@ public class DrillHeadBE extends KineticBlockEntity {
     }
 
     @Override
-    public void invalidate() {
-        super.invalidate();
+    public void remove() {
         DrillCoreBE core = getCore();
         if (core != null) {
             core.removeDrillHead();
         }
+        super.remove();
     }
 
     public static String DAMAGE_KEY = "Damage";
