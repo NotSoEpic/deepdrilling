@@ -17,6 +17,9 @@
   "entrypoints": {
     "main": [
       "com.deepdrilling.fabric.DrillModFabric"
+    ],
+    "client": [
+      "com.deepdrilling.fabric.DrillModClientFabric"
     ]
   },
   "mixins": [
