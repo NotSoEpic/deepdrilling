@@ -14,5 +14,28 @@
 	"block.deepdrilling.asurine_node": "Asurine Node",
 	"block.deepdrilling.crimsite_node": "Crimsite Node",
 	"block.deepdrilling.ochrum_node": "Ochrum Node",
-	"block.deepdrilling.veridium_node": "Veridium Node"
+	"block.deepdrilling.veridium_node": "Veridium Node",
+
+	"deepdrilling.ponder.node_locating.header": "Locating Ore Nodes",
+	"deepdrilling.ponder.node_locating.text_1": "Rarely, deposits of stone and ore may be found on the surface",
+	"deepdrilling.ponder.node_locating.text_2": "Deep underground beneath these...",
+	"deepdrilling.ponder.node_locating.text_3": "... Are ore nodes",
+
+	"deepdrilling.ponder.node_biomes.header": "Ore Node Biomes",
+	"deepdrilling.ponder.node_biomes.text_1": "Different deposits only appear within certain biomes",
+	"deepdrilling.ponder.node_biomes.text_2": "Veridium generates within oceans",
+	"deepdrilling.ponder.node_biomes.text_3": "Crimsite generates within mountains",
+	"deepdrilling.ponder.node_biomes.text_4": "Ochrum generates within arid locations",
+	"deepdrilling.ponder.node_biomes.text_5": "Asurine generates within cold locations",
+
+	"deepdrilling.ponder.drill_basics.header": "Using Deep Drills",
+	"deepdrilling.ponder.drill_basics.text_1": "When given a drill head and Rotational Force, a Deep Drill will begin extracting resources from Ore Nodes",
+	"deepdrilling.ponder.drill_basics.text_2": "The process can be sped up with better Drill Heads...",
+	"deepdrilling.ponder.drill_basics.text_3": "... or increasing its Rotational Input",
+
+	"deepdrilling.ponder.drill_modules.header": "Using Modules",
+	"deepdrilling.ponder.drill_modules.text_1": "To prevent items from being thrown on the ground a Collection Filter can be added",
+	"deepdrilling.ponder.drill_modules.text_2": "Results are stored in its inventory",
+	"deepdrilling.ponder.drill_modules.text_3": "And can be automatically extracted",
+	"deepdrilling.ponder.drill_modules.text_4": "Up to 5 modules can be attached to one Deep Drill"
 }
