@@ -100,7 +100,7 @@ public class OreNodeFeature extends Feature<OreNodeConfiguration> {
                     if (x*x + z*z + y*y < (random.nextFloat() * 4 + 5)) {
                         safeSetBlock(level, surfacePos,
                                 choose(y < 0 ? oreStates : layerStates, random),
-                                state -> state.is(Blocks.AIR) || !state.getFluidState().isEmpty() || state.is(BlockTags.REPLACEABLE_PLANTS) || state.is(BlockTags.OVERWORLD_CARVER_REPLACEABLES));
+                                state -> state.is(Blocks.AIR) || !state.getFluidState().isEmpty() || state.is(BlockTags.REPLACEABLE_PLANTS) || state.is(BlockTags.OVERWORLD_CARVER_REPLACEABLES) || state.is(BlockTags.AZALEA_ROOT_REPLACEABLE));
                     }
                 }
             }

@@ -44,7 +44,7 @@ public class DrillHeadTooltips implements TooltipModifier {
             return ChatFormatting.GREEN;
         return ChatFormatting.YELLOW;
     }
-    private static int barLength(double factor) {
+    public static int barLengthProbability(double factor) {
         if (factor <= 0)
             return 0;
         if (factor < 1)
@@ -54,8 +54,39 @@ public class DrillHeadTooltips implements TooltipModifier {
         return 2;
     }
 
-    public static String makeMultiplier(double factor, boolean numbers, String suffix) {
-        String bar = TooltipHelper.makeProgressBar(3, barLength(factor));
+    public static String makeProbabilityMultiplier(double factor, boolean numbers, String suffix) {
+        String bar = TooltipHelper.makeProgressBar(3, barLengthProbability(factor));
+        if (numbers)
+            bar += LangNumberFormat.format(factor) + "x";
+        if (!Objects.equals(suffix, ""))
+            bar += " " + suffix;
+        return bar;
+    }
+
+    public static ChatFormatting speedColor(double speed) {
+        if (speed < 1)
+            return ChatFormatting.DARK_RED;
+        if (speed == 1)
+            return ChatFormatting.RED;
+        if (speed < 2)
+            return ChatFormatting.YELLOW;
+        return ChatFormatting.GREEN;
+    }
+    private static int barLengthSpeed(double speed) {
+        if (speed < 1) {
+            return 0;
+        }
+        if (speed == 1) {
+            return 1;
+        }
+        if (speed < 2) {
+            return 2;
+        }
+        return 3;
+    }
+
+    public static String makeSpeedBar(double factor, boolean numbers, String suffix) {
+        String bar = TooltipHelper.makeProgressBar(3, barLengthSpeed(factor));
         if (numbers)
             bar += LangNumberFormat.format(factor) + "x";
         if (!Objects.equals(suffix, ""))
@@ -69,20 +100,22 @@ public class DrillHeadTooltips implements TooltipModifier {
 
         double speed = 1.0 / DrillHeadStats.getDrillSpeedModifier(drillID);
 
-        String bar = makeMultiplier(speed, hasGoggles, "");
+        String bar = makeSpeedBar(speed, hasGoggles, "");
         if (!hasGoggles) {
             if (speed < 1) {
                 bar += "Slow";
-            } else if (speed > 1) {
+            } else if (speed == 1) {
+                bar += "Normal";
+            } else if (speed < 2) {
                 bar += "Fast";
             }
             else {
-                bar += "Normal";
+                bar += "Blazing";
             }
         }
 
         Lang.builder().add(Lang.text("Speed:").style(ChatFormatting.GRAY)).addTo(list);
-        Lang.builder().add(Lang.text(bar).style(mulColor(speed))).addTo(list);
+        Lang.builder().add(Lang.text(bar).style(speedColor(speed))).addTo(list);
 
         Lang.builder().add(Lang.text("Resource Odds:").style(ChatFormatting.GRAY)).addTo(list);
         DrillHeadStats.getLootWeightMultiplier(drillID).addTooltip(list, hasGoggles, true);

@@ -37,13 +37,13 @@ public class OreNodes {
                 .addLayer(new ResourceLocation("create", "ochrum"))
                 .addLayer(Blocks.TUFF)
                 .addLayer(Blocks.DRIPSTONE_BLOCK)
-                .configureFeature(400), DrillMod.id("ochrum_node"), OCHRUM_NODE_BIOMES);
+                .configureFeature(350), DrillMod.id("ochrum_node"), OCHRUM_NODE_BIOMES);
         register(new ConfiguredNodeBuilder(DBlocks.VERIDIUM_NODE)
                 .addOre(Blocks.DEEPSLATE_COPPER_ORE)
                 .addLayer(new ResourceLocation("create", "veridium"))
                 .addLayer(Blocks.TUFF)
                 .addLayer(Blocks.ANDESITE)
-                .configureFeature(300), DrillMod.id("veridium_node"), VERIDIUM_NODE_BIOMES);
+                .configureFeature(250), DrillMod.id("veridium_node"), VERIDIUM_NODE_BIOMES);
 
     }
     @ExpectPlatform

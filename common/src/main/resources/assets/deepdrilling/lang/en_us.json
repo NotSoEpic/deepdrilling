@@ -16,6 +16,9 @@
 	"block.deepdrilling.ochrum_node": "Ochrum Node",
 	"block.deepdrilling.veridium_node": "Veridium Node",
 
+	"deepdrilling.ponder.tag.drilling": "Deep Drilling",
+	"deepdrilling.ponder.tag.drilling.description": "Components which are used to extract resources from the very core of the earth",
+
 	"deepdrilling.ponder.node_locating.header": "Locating Ore Nodes",
 	"deepdrilling.ponder.node_locating.text_1": "Rarely, deposits of stone and ore may be found on the surface",
 	"deepdrilling.ponder.node_locating.text_2": "Deep underground beneath these...",

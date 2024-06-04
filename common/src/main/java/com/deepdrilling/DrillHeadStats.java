@@ -119,7 +119,7 @@ public class DrillHeadStats {
         }
 
         private static void addCollectionModifier(List<Component> list, double mod, boolean goggles, String name) {
-            Lang.builder().add(Lang.text(DrillHeadTooltips.makeMultiplier(mod, goggles, name))
+            Lang.builder().add(Lang.text(DrillHeadTooltips.makeProbabilityMultiplier(mod, goggles, name))
                     .style(DrillHeadTooltips.mulColor(mod))).addTo(list);
         }
     }
