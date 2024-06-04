@@ -21,11 +21,9 @@ public class DrillModForge {
     public DrillModForge() {
         DrillMod.REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, TooltipHelper.Palette.STANDARD_CREATE)
                 .andThen(TooltipModifier.mapNull(KineticStats.create(item)))
-                // why forge... this should not need be a thing
                 .andThen(TooltipModifier.mapNull(DrillHeadTooltipsForge.create(item)))
                 .andThen(TooltipModifier.mapNull(ModuleStatTooltipsForge.create(item)))
         );
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> DrillModClientForge::init);
 
         DrillMod.BASE_CREATIVE_TAB = new DrillCreativeTab(CreativeModeTab.TABS.length, "deepdrilling.creative_tab");
         // registrate must be given the mod event bus on forge before registration
@@ -33,5 +31,9 @@ public class DrillModForge {
         DrillMod.REGISTRATE.registerEventListeners(eventBus);
         DrillMod.init();
         OreNodeManager.init(eventBus);
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            DrillModClientForge.setupEvents(eventBus);
+        });
     }
 }
