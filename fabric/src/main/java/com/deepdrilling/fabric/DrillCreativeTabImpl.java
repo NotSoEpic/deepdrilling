@@ -27,4 +27,7 @@ public class DrillCreativeTabImpl {
     public static void setCreativeTab() {
         DrillMod.REGISTRATE.setCreativeTab(KEY);
     }
+
+    public static void register() {
+    }
 }

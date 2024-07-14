@@ -20,6 +20,7 @@ public class DrillMod {
     public static void init() {
         LOGGER.info("{} initializing! Create version: {} on platform: {}", NAME, Create.VERSION, ExpectPlatform.platformName());
 
+        DrillCreativeTab.register();
         DrillCreativeTab.setCreativeTab();
         DBlocks.init(); // hold registrate in a separate class to avoid loading early on forge
         DItems.init();

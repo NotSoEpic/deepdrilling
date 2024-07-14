@@ -25,4 +25,8 @@ public class DrillCreativeTabImpl {
     public static void setCreativeTab() {
         DrillMod.REGISTRATE.setCreativeTab(TAB);
     }
+
+    public static void register() {
+        REGISTER.register(DrillModForge.getBus());
+    }
 }

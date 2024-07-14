@@ -14,9 +14,10 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(DrillMod.MOD_ID)
 public class DrillModForge {
-
+    private static IEventBus BUS;
 
     public DrillModForge() {
+        BUS = FMLJavaModLoadingContext.get().getModEventBus();
         DrillMod.REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, TooltipHelper.Palette.STANDARD_CREATE)
                 .andThen(TooltipModifier.mapNull(KineticStats.create(item)))
                 .andThen(TooltipModifier.mapNull(DrillHeadTooltipsForge.create(item)))
@@ -25,13 +26,16 @@ public class DrillModForge {
 
 //        DrillMod.BASE_CREATIVE_TAB = new DrillCreativeTab(CreativeModeTab.TABS.length, "deepdrilling.creative_tab");
         // registrate must be given the mod event bus on forge before registration
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        DrillMod.REGISTRATE.registerEventListeners(eventBus);
+        DrillMod.REGISTRATE.registerEventListeners(BUS);
         DrillMod.init();
-        OreNodeManager.init(eventBus);
+        OreNodeManager.init(BUS);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            DrillModClientForge.setupEvents(eventBus);
+            DrillModClientForge.setupEvents(BUS);
         });
+    }
+
+    public static IEventBus getBus() {
+        return BUS;
     }
 }
