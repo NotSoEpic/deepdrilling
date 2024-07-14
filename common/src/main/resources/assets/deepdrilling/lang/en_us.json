@@ -1,4 +1,6 @@
 {
+	"itemGroup.deepdrilling.main": "Deep Drilling",
+
 	"block.deepdrilling.drill_core": "Drill Core",
 	"block.deepdrilling.collection_filter": "Collection Filter",
 	"block.deepdrilling.drill_overclock": "Drill Overclock",
