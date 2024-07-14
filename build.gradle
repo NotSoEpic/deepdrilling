@@ -1,7 +1,7 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.0-SNAPSHOT" apply false
-    id "io.github.juuxel.loom-quiltflower" version "1.+" apply false // Quiltflower, a better decompiler
+    id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
+//    id "io.github.juuxel.loom-vineflower" version "1.+" apply false // Vineflower, a better better decompiler
     id "io.github.p03w.machete" version "1.+" // automatic jar compressing on build
 }
 
@@ -11,7 +11,7 @@ architectury {
 
 subprojects {
     apply plugin: "dev.architectury.loom"
-    apply plugin: "io.github.juuxel.loom-quiltflower"
+//    apply plugin: "io.github.juuxel.loom-vineflower"
 
     loom {
         silentMojangMappingsLicense()
@@ -23,6 +23,7 @@ subprojects {
         maven { url = "https://maven.blamejared.com/" } // JEI
         maven { url = "https://maven.parchmentmc.org" } // Parchment mappings
         maven { url = "https://maven.quiltmc.org/repository/release" } // Quilt Mappings
+        maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" } // Forge Config API Port
         maven { // Flywheel
             url = "https://maven.tterrag.com/"
             content {

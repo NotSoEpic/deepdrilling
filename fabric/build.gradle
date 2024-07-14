@@ -37,7 +37,7 @@ repositories {
     maven { url = "https://api.modrinth.com/maven" } // LazyDFU
     maven { url = "https://maven.terraformersmc.com/releases/" } // Mod Menu
     maven { url = "https://mvn.devos.one/snapshots/" } // Create Fabric, Porting Lib, Forge Tags, Milk Lib, Registrate Fabric
-    maven { url = "https://cursemaven.com" } // Forge Config API Port
+    maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" } // Forge Config API Port
     maven { url = "https://maven.cafeteria.dev/releases" } // Fake Player API
     maven { url = "https://maven.jamieswhiteshirt.com/libs-release" } // Reach Entity Attributes
     maven { url = "https://jitpack.io/" } // Mixin Extras, Fabric ASM
@@ -98,18 +98,19 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+//    classifier "dev-shadow"
+    archiveClassifier.set("fabric-dev-shadow")
 }
 
 remapJar {
     injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    archiveClassifier.set("fabric")
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier.set("fabric-dev")
 }
 
 sourcesJar {
