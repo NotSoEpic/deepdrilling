@@ -10,11 +10,10 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MaterialColor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +42,6 @@ public class DDrillHeads {
         BlockEntry<DrillHeadBlock> block = DrillMod.REGISTRATE
                 .block(blockID, DrillHeadBlock::new)
                 .addLayer(() -> RenderType::cutout)
-                .properties(p ->  p.color(MaterialColor.STONE))
                 .properties(BlockBehaviour.Properties::noOcclusion)
                 .transform(pickaxeOnly())
                 .transform(BlockStressDefaults.setImpact(stress))
@@ -88,7 +86,7 @@ public class DDrillHeads {
         return partialModels.get(blockID);
     }
     public static PartialModel getPartialModel(BlockState state) {
-        return getPartialModel(Registry.BLOCK.getKey(state.getBlock()));
+        return getPartialModel(BuiltInRegistries.BLOCK.getKey(state.getBlock()));
     }
 
     public static void init() {}

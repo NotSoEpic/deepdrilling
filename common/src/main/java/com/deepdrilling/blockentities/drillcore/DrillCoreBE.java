@@ -23,9 +23,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -109,7 +111,7 @@ public class DrillCoreBE extends KineticBlockEntity {
         double speed = calculateSpeed();
         if (speed < 0)
             return -1;
-        return (int) Mth.clamp(0.1 * speed, 1, 160);
+        return (int) Mth.clamp(0.05 * speed, 1, 160);
     }
 
     public DrillHeadBE drillHead = null;
@@ -126,27 +128,30 @@ public class DrillCoreBE extends KineticBlockEntity {
     }
 
     public boolean canDrill(BlockState state) {
-        return !state.getMaterial().isLiquid() &&
+        return !state.liquid() &&
                 !state.isAir() &&
                 getDrillHead() != null &&
                 OreNodes.get(state.getBlock()).hasTables();
     }
 
-    public List<ItemStack> getDrops() {
+    public List<ItemStack> getDrops(ServerLevel level) {
         OreNode node = OreNodes.get(level.getBlockState(breakingPos).getBlock());
         DrillHeadStats.WeightMultipliers weights = drillHead.getWeightMultipliers().mul(node.weights);
         weights = weights.mul(getWeightMultipliers());
         OreNode.LOOT_TYPE type = weights.pick(level.random);
 
-        LootTable loot = node.getTable(level.getServer().getLootTables(), type);
-        LootContext.Builder builder = new LootContext.Builder((ServerLevel) level);
-        return loot.getRandomItems(builder.create(LootContextParamSets.EMPTY));
+        LootTable lootTable = node.getTable(level, type);
+        // todo: proper lootcontextparam
+        LootParams lootParams = (new LootParams.Builder(level))
+                .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(getBreakingPosition()))
+                .create(LootContextParamSets.ARCHAEOLOGY);
+        return lootTable.getRandomItems(lootParams);
     }
 
-    public void mineBlock() {
+    public void mineBlock(ServerLevel level) {
         findModules();
 
-        List<ItemStack> drops = getDrops();
+        List<ItemStack> drops = getDrops(level);
 
         for (Tuple<Integer, IDrillCollector> collectorInfo : collectors) {
             IDrillCollector collector = collectorInfo.getB();
@@ -156,7 +161,7 @@ public class DrillCoreBE extends KineticBlockEntity {
         }
         for (ItemStack drop : drops) {
             ItemEntity item = new ItemEntity(level,
-                    getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(),
+                    getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.5, getBlockPos().getZ() + 0.5,
                     drop
             );
             level.addFreshEntity(item);
@@ -268,7 +273,7 @@ public class DrillCoreBE extends KineticBlockEntity {
     public void tick() {
         super.tick();
 
-        if (level.isClientSide || getSpeed() == 0 || ticksUntilProgress < 0)
+        if (!(level instanceof ServerLevel serverLevel) || getSpeed() == 0 || ticksUntilProgress < 0)
             return;
 
         breakingPos = getBreakingPosition();
@@ -289,7 +294,7 @@ public class DrillCoreBE extends KineticBlockEntity {
             if (destroyProgress >= 10) {
                 destroyProgress = 0;
                 modules.forEach(m -> m.blockBroken(this));
-                mineBlock();
+                mineBlock(serverLevel);
                 ifDrillHeadDo(drillHead -> drillHead.applyDamage(calculateDamage()));
                 level.destroyBlockProgress(breakerId, breakingPos, -1);
             } else {

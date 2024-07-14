@@ -1,0 +1,14 @@
+{
+  "type": "deepdrilling:ore_node",
+  "config": {
+    "nodeID": "deepdrilling:asurine_node",
+    "ores": [
+      "create:zinc_ore"
+    ],
+    "layers": [
+      "create:asurine",
+      "minecraft:tuff",
+      "minecraft:calcite"
+    ]
+  }
+}

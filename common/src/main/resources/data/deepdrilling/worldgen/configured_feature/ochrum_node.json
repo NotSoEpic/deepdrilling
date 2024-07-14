@@ -1,0 +1,14 @@
+{
+  "type": "deepdrilling:ore_node",
+  "config": {
+    "nodeID": "deepdrilling:ochrum_node",
+    "ores": [
+      "minecraft:gold_ore"
+    ],
+    "layers": [
+      "create:ochrum",
+      "minecraft:tuff",
+      "minecraft:dripstone_block"
+    ]
+  }
+}

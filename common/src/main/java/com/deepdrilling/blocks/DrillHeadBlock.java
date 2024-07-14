@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -50,10 +50,10 @@ public class DrillHeadBlock extends DirectionalKineticBlock implements IBE<Drill
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         BlockEntity blockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (blockEntity instanceof DrillHeadBE drillHeadBE) {
-            builder = builder.withDynamicDrop(DRILL_DURABILITY, (context, consumer) -> {
+            builder = builder.withDynamicDrop(DRILL_DURABILITY, (consumer) -> {
                 consumer.accept(drillHeadBE.setItemDamage(state.getBlock().asItem().getDefaultInstance()));
             });
         }
@@ -142,7 +142,7 @@ public class DrillHeadBlock extends DirectionalKineticBlock implements IBE<Drill
         @Override
         public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray) {
             Direction dir = state.getValue(DrillCore.FACING);
-            if (world.getBlockState(pos.relative(dir)).getMaterial().isReplaceable())
+            if (world.getBlockState(pos.relative(dir)).canBeReplaced())
                 return PlacementOffset.success(pos.relative(dir), s -> s.setValue(DrillHeadBlock.FACING, dir));
             return PlacementOffset.fail();
         }

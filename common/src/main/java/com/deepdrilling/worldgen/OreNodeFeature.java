@@ -1,9 +1,8 @@
 package com.deepdrilling.worldgen;
 
-import com.mojang.math.Vector3d;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
@@ -13,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,12 +48,13 @@ public class OreNodeFeature extends Feature<OreNodeConfiguration> {
         }
         blobCenters.add(BlockPos.ZERO);
 
-        Vector3d blobCom = new Vector3d(0, 0, 0);
-        blobCenters.forEach(pos -> blobCom.add(new Vector3d(pos.getX(), pos.getY(), pos.getZ())));
+        Vec3 blobCom = new Vec3(0, 0, 0);
+        blobCenters.forEach(pos -> blobCom.add(Vec3.atCenterOf(pos)));
         blobCom.scale(1.0 / blobCenters.size());
 
         int offs = random.nextInt(layerStates.size());
 
+        // todo what the fuck does /place do to create phantom blocks
         // main ore
         for (int x = -16; x < 17; x++) {
             for (int z = -16; z < 17; z++) {
@@ -67,14 +68,14 @@ public class OreNodeFeature extends Feature<OreNodeConfiguration> {
                             level.setBlock(pos, blockState, 0x10);
                         }
                     } else {
-                        if (lengthSquared(new Vector3d(blobCom.x-x, blobCom.y-y, blobCom.z-z)) < 16) {
+                        if (blobCom.subtract(x, y, z).lengthSqr() < 16) {
                             level.setBlock(pos, y < 4 ? Blocks.LAVA.defaultBlockState() : Blocks.AIR.defaultBlockState(), 0x10);
                         } else {
                             double r = 0;
                             for (BlockPos blobPos : blobCenters) {
-                                Vector3d diff = vec3FromBlock(blobPos);
-                                diff.add(new Vector3d(-x, -y * 0.65, -z));
-                                r += Math.sqrt(lengthSquared(diff));
+                                Vec3 diff = Vec3.atCenterOf(blobPos);
+                                diff.add(new Vec3(-x, -y * 0.65, -z));
+                                r += diff.length();
                             }
                             r /= blobCenters.size();
                             r += random.nextDouble() * 0.5;
@@ -100,7 +101,7 @@ public class OreNodeFeature extends Feature<OreNodeConfiguration> {
                     if (x*x + z*z + y*y < (random.nextFloat() * 4 + 5)) {
                         safeSetBlock(level, surfacePos,
                                 choose(y < 0 ? oreStates : layerStates, random),
-                                state -> state.is(Blocks.AIR) || !state.getFluidState().isEmpty() || state.is(BlockTags.REPLACEABLE_PLANTS) || state.is(BlockTags.OVERWORLD_CARVER_REPLACEABLES) || state.is(BlockTags.AZALEA_ROOT_REPLACEABLE));
+                                state -> state.is(Blocks.AIR) || !state.getFluidState().isEmpty() || state.is(BlockTags.REPLACEABLE) || state.is(BlockTags.OVERWORLD_CARVER_REPLACEABLES) || state.is(BlockTags.AZALEA_ROOT_REPLACEABLE));
                     }
                 }
             }
@@ -109,20 +110,10 @@ public class OreNodeFeature extends Feature<OreNodeConfiguration> {
     }
 
     public static BlockState parseResourceLocation(ResourceLocation resource) {
-        BlockState blockState = Registry.BLOCK.get(resource).defaultBlockState();
-        if (blockState == null) throw new IllegalArgumentException(resource + " could not be parsed as a valid block identifier");
-        return blockState;
+        return BuiltInRegistries.BLOCK.get(resource).defaultBlockState();
     }
 
     public static <T> T choose(List<T> list, RandomSource random) {
         return list.get(random.nextInt(list.size()));
-    }
-
-    public static Vector3d vec3FromBlock(BlockPos pos) {
-        return new Vector3d(pos.getX(), pos.getY(), pos.getZ());
-    }
-
-    public static double lengthSquared(Vector3d vec) {
-        return (vec.x * vec.x) + (vec.y * vec.y) + (vec.z * vec.z);
     }
 }

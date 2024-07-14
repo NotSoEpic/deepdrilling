@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangNumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -40,17 +40,17 @@ public class DrillHeadBE extends KineticBlockEntity {
     }
 
     public double getMaxDamage() {
-        ResourceLocation name = Registry.BLOCK.getKey(getBlockState().getBlock());
+        ResourceLocation name = BuiltInRegistries.BLOCK.getKey(getBlockState().getBlock());
         return DrillHeadStats.DRILL_DURABILITY.getOrDefault(name, 100.0);
     }
 
     public double getSpeedModifier() {
-        ResourceLocation name = Registry.BLOCK.getKey(getBlockState().getBlock());
+        ResourceLocation name = BuiltInRegistries.BLOCK.getKey(getBlockState().getBlock());
         return DrillHeadStats.DRILL_SPEED_MODIFIERS.getOrDefault(name, 1.0);
     }
 
     public DrillHeadStats.WeightMultipliers getWeightMultipliers() {
-        ResourceLocation name = Registry.BLOCK.getKey(getBlockState().getBlock());
+        ResourceLocation name = BuiltInRegistries.BLOCK.getKey(getBlockState().getBlock());
         return DrillHeadStats.LOOT_WEIGHT_MULTIPLIER.getOrDefault(name, DrillHeadStats.WeightMultipliers.ONE);
     }
 

@@ -1,0 +1,15 @@
+{
+  "feature": "deepdrilling:veridium_node",
+  "placement": [
+    {
+      "type": "biome"
+    },
+    {
+      "type": "rarity_filter",
+      "chance": 250
+    },
+    {
+      "type": "in_square"
+    }
+  ]
+}

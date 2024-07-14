@@ -7,7 +7,7 @@ import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangNumberFormat;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +22,7 @@ import java.util.Objects;
 public class DrillHeadTooltips implements TooltipModifier {
     @Override
     public void modify(ItemStack stack, Player player, TooltipFlag flags, List<Component> tooltip) {
-        List<Component> stats = getDrillStats(Registry.ITEM.getKey(stack.getItem()), player);
+        List<Component> stats = getDrillStats(BuiltInRegistries.ITEM.getKey(stack.getItem()), player);
         if (!stats.isEmpty()) {
             tooltip.addAll(stats);
         }

@@ -2,8 +2,8 @@ package com.deepdrilling.nodes;
 
 import com.deepdrilling.DrillHeadStats.WeightMultipliers;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTables;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -36,12 +36,12 @@ public class OreNode {
     }
 
     @Nullable
-    public LootTable getTable(LootTables tables, LOOT_TYPE type) {
-        return tables.get(new ResourceLocation(getTableName(type)));
+    public LootTable getTable(ServerLevel level, LOOT_TYPE type) {
+        return level.getServer().getLootData().getLootTable(new ResourceLocation(getTableName(type)));
     }
 
-    public boolean hasTable(LootTables tables, LOOT_TYPE type) {
-        return getTable(tables, type) != LootTable.EMPTY;
+    public boolean hasTable(ServerLevel level, LOOT_TYPE type) {
+        return getTable(level, type) != LootTable.EMPTY;
     }
 
     public boolean hasTables() {

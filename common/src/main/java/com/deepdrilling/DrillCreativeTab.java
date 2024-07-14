@@ -1,54 +1,24 @@
 package com.deepdrilling;
 
-import com.deepdrilling.blockentities.drillhead.DDrillHeads;
-import com.deepdrilling.blocks.DrillHeadBlock;
-import com.tterrag.registrate.util.entry.RegistryEntry;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
-import net.minecraft.world.item.BlockItem;
+import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
-import java.util.Collection;
-
-public class DrillCreativeTab extends CreativeModeTab {
-    public DrillCreativeTab(int id, String langId) {
-        super(id, langId);
+public class DrillCreativeTab {
+    // todo: why doesnt this work? :(
+    @ExpectPlatform
+    public static void setCreativeTab() {
+        throw new AssertionError();
     }
 
-    @Override
-    public void fillItemList(NonNullList<ItemStack> items) {
-        addDrills(items);
-        addNonDrills(items);
-    }
+    public static void register() {}
 
-    protected Collection<RegistryEntry<Item>> registeredItems() {
-        return DrillMod.REGISTRATE.getAll(Registry.ITEM_REGISTRY);
-    }
+    public static class ItemDisplay implements CreativeModeTab.DisplayItemsGenerator {
 
-    public void addNonDrills(NonNullList<ItemStack> items) {
-        for (RegistryEntry<Item> entry : registeredItems()) {
-            if (entry.get() instanceof BlockItem blockItem) {
-                if (!(blockItem.getBlock() instanceof DrillHeadBlock)) {
-                    blockItem.fillItemCategory(this, items);
-                }
-            }
+        @Override
+        public void accept(CreativeModeTab.ItemDisplayParameters itemDisplayParameters, CreativeModeTab.Output output) {
+            output.acceptAll(DrillMod.REGISTRATE.getAll(Registries.ITEM).stream()
+                    .map(item -> item.get().getDefaultInstance()).toList());
         }
-    }
-
-    public void addDrills(NonNullList<ItemStack> items) {
-        for (RegistryEntry<Item> entry : registeredItems()) {
-            if (entry.get() instanceof BlockItem blockItem) {
-                if (blockItem.getBlock() instanceof DrillHeadBlock) {
-                    blockItem.fillItemCategory(this, items);
-                }
-            }
-        }
-    }
-
-    @Override
-    public ItemStack makeIcon() {
-        return DDrillHeads.ANDESITE.get().asItem().getDefaultInstance();
     }
 }

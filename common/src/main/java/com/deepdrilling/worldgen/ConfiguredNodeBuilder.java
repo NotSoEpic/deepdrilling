@@ -3,7 +3,7 @@ package com.deepdrilling.worldgen;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -33,7 +33,7 @@ public class ConfiguredNodeBuilder {
         return this;
     }
     public ConfiguredNodeBuilder addOre(Block ore) {
-        this.ores.add(Registry.BLOCK.getKey(ore));
+        this.ores.add(BuiltInRegistries.BLOCK.getKey(ore));
         return this;
     }
     public ConfiguredNodeBuilder addOre(BlockEntry<?> ore) {
@@ -47,10 +47,10 @@ public class ConfiguredNodeBuilder {
         return addLayer(layer.getId());
     }
     public ConfiguredNodeBuilder addLayer(NonNullSupplier<Block> layer) {
-        return addLayer(Registry.BLOCK.getKey(layer.get()));
+        return addLayer(BuiltInRegistries.BLOCK.getKey(layer.get()));
     }
     public ConfiguredNodeBuilder addLayer(Block layer) {
-        return addLayer(Registry.BLOCK.getKey(layer));
+        return addLayer(BuiltInRegistries.BLOCK.getKey(layer));
     }
 
     public FeatureData configureFeature(List<PlacementModifier> filters) {

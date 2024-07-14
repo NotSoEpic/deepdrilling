@@ -1,0 +1,14 @@
+{
+  "type": "deepdrilling:ore_node",
+  "config": {
+    "nodeID": "deepdrilling:veridium_node",
+    "ores": [
+      "minecraft:copper_ore"
+    ],
+    "layers": [
+      "create:veridium",
+      "minecraft:tuff",
+      "minecraft:andesite"
+    ]
+  }
+}

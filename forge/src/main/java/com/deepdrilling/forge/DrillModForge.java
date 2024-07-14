@@ -1,13 +1,11 @@
 package com.deepdrilling.forge;
 
-import com.deepdrilling.DrillCreativeTab;
 import com.deepdrilling.DrillMod;
 import com.deepdrilling.forge.worldgen.OreNodeManager;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -25,7 +23,7 @@ public class DrillModForge {
                 .andThen(TooltipModifier.mapNull(ModuleStatTooltipsForge.create(item)))
         );
 
-        DrillMod.BASE_CREATIVE_TAB = new DrillCreativeTab(CreativeModeTab.TABS.length, "deepdrilling.creative_tab");
+//        DrillMod.BASE_CREATIVE_TAB = new DrillCreativeTab(CreativeModeTab.TABS.length, "deepdrilling.creative_tab");
         // registrate must be given the mod event bus on forge before registration
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         DrillMod.REGISTRATE.registerEventListeners(eventBus);

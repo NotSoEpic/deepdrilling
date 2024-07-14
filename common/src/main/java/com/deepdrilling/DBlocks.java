@@ -9,7 +9,6 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MaterialColor;
 
 import static com.simibubi.create.foundation.data.TagGen.axeOrPickaxe;
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
@@ -23,7 +22,6 @@ public class DBlocks {
 			.block("drill_core", DrillCore::new)
 			.addLayer(() -> RenderType::cutout)
 			.initialProperties(SharedProperties::stone)
-			.properties(p ->  p.color(MaterialColor.PODZOL))
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(axeOrPickaxe())
 			.lang("Drill Core")
@@ -36,7 +34,6 @@ public class DBlocks {
 
 	public static final BlockEntry<CollectorModuleBlock> COLLECTOR = DrillMod.REGISTRATE
 			.block("collection_filter", CollectorModuleBlock::new)
-			.properties(p ->  p.color(MaterialColor.PODZOL))
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(axeOrPickaxe())
 			.lang("Collection Filter")
@@ -50,7 +47,6 @@ public class DBlocks {
 			.block("drill_overclock", OverclockModuleBlock::new)
 			.addLayer(() -> RenderType::cutout)
 			.lang("Drill Overclock")
-			.properties(p ->  p.color(MaterialColor.PODZOL))
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(pickaxeOnly())
 			.transform(BlockStressDefaults.setImpact(8))
@@ -61,32 +57,36 @@ public class DBlocks {
 
 	public static final BlockEntry<SludgePumpModuleBlock> SLUDGE_PUMP = DrillMod.REGISTRATE
 			.block("sludge_pump", SludgePumpModuleBlock::new)
-			.properties(p -> p.color(MaterialColor.PODZOL))
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(axeOrPickaxe())
 			.transform(BlockStressDefaults.setImpact(4))
-			.simpleItem()
+			.item()
+			.build()
 			.register();
 
 	public static final BlockEntry<OreNodeBlock> CRIMSITE_NODE = DrillMod.REGISTRATE
 			.block("crimsite_node", OreNodeBlock::new)
 			.initialProperties(() -> Blocks.BEDROCK)
-			.simpleItem()
+			.item()
+			.build()
 			.register(),
 	ASURINE_NODE = DrillMod.REGISTRATE
 			.block("asurine_node", OreNodeBlock::new)
 			.initialProperties(() -> Blocks.BEDROCK)
-			.simpleItem()
+			.item()
+			.build()
 			.register(),
 	OCHRUM_NODE = DrillMod.REGISTRATE
 			.block("ochrum_node", OreNodeBlock::new)
 			.initialProperties(() -> Blocks.BEDROCK)
-			.simpleItem()
+			.item()
+			.build()
 			.register(),
 	VERIDIUM_NODE = DrillMod.REGISTRATE
 			.block("veridium_node", OreNodeBlock::new)
 			.initialProperties(() -> Blocks.BEDROCK)
-			.simpleItem()
+			.item()
+			.build()
 			.register();
 
 	public static void init() {

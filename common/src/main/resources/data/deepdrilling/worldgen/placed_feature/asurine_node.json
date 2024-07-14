@@ -1,0 +1,15 @@
+{
+  "feature": "deepdrilling:asurine_node",
+  "placement": [
+    {
+      "type": "biome"
+    },
+    {
+      "type": "rarity_filter",
+      "chance": 200
+    },
+    {
+      "type": "in_square"
+    }
+  ]
+}

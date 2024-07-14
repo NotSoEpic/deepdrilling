@@ -3,13 +3,13 @@ package com.deepdrilling.nodes;
 import com.deepdrilling.DrillMod;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTables;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,8 +25,8 @@ public class OreNodes {
         return nodes.getOrDefault(block, OreNode.EMPTY);
     }
 
-    public static LootTable get(Block block, OreNode.LOOT_TYPE type, LootTables tables) {
-        return get(block).getTable(tables, type);
+    public static LootTable get(Block block, OreNode.LOOT_TYPE type, ServerLevel level) {
+        return get(block).getTable(level, type);
     }
 
     public static List<OreNodeFormat> prepare(ResourceManager manager) {
@@ -48,7 +48,7 @@ public class OreNodes {
     public static void apply(List<OreNodeFormat> nodeList) {
         ImmutableMap.Builder<Block, OreNode> builder = ImmutableMap.builder();
         for (OreNodeFormat node : nodeList) {
-            Block block = Registry.BLOCK.get(new ResourceLocation(node.block));
+            Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(node.block));
             if (block != Blocks.AIR) {
                 builder.put(block, new OreNode(node.loot_tables));
             } else {

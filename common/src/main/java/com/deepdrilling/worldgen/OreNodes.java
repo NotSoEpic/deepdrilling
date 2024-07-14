@@ -4,7 +4,7 @@ import com.deepdrilling.DBlocks;
 import com.deepdrilling.DrillMod;
 import com.simibubi.create.AllBlocks;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
@@ -14,10 +14,10 @@ public class OreNodes {
     public static final ResourceLocation ORE_NODE_ID = DrillMod.id("ore_node");
     public static final OreNodeFeature ORE_NODE = new OreNodeFeature(OreNodeConfiguration.CODEC);
 
-    public static final TagKey<Biome> ASURINE_NODE_BIOMES = TagKey.create(Registry.BIOME_REGISTRY, DrillMod.id("asurine_node"));
-    public static final TagKey<Biome> CRIMSITE_NODE_BIOMES = TagKey.create(Registry.BIOME_REGISTRY, DrillMod.id("crimsite_node"));
-    public static final TagKey<Biome> OCHRUM_NODE_BIOMES = TagKey.create(Registry.BIOME_REGISTRY, DrillMod.id("ochrum_node"));
-    public static final TagKey<Biome> VERIDIUM_NODE_BIOMES = TagKey.create(Registry.BIOME_REGISTRY, DrillMod.id("veridium_node"));
+    public static final TagKey<Biome> ASURINE_NODE_BIOMES = TagKey.create(Registries.BIOME, DrillMod.id("asurine_node"));
+    public static final TagKey<Biome> CRIMSITE_NODE_BIOMES = TagKey.create(Registries.BIOME, DrillMod.id("crimsite_node"));
+    public static final TagKey<Biome> OCHRUM_NODE_BIOMES = TagKey.create(Registries.BIOME, DrillMod.id("ochrum_node"));
+    public static final TagKey<Biome> VERIDIUM_NODE_BIOMES = TagKey.create(Registries.BIOME, DrillMod.id("veridium_node"));
 
     public static void init() {
         register(new ConfiguredNodeBuilder(DBlocks.ASURINE_NODE)

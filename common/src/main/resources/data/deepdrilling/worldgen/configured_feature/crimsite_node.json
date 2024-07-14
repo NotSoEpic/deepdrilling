@@ -1,0 +1,14 @@
+{
+  "type": "deepdrilling:ore_node",
+  "config": {
+    "nodeID": "deepdrilling:crimsite_node",
+    "ores": [
+      "minecraft:iron_ore"
+    ],
+    "layers": [
+      "create:crimsite",
+      "minecraft:tuff",
+      "create:limestone"
+    ]
+  }
+}
