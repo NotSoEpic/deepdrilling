@@ -3,15 +3,15 @@
   "id": "deepdrilling",
   "version": "${version}",
   "name": "Deep Drilling",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "An addon for Create, adding powerful drills that extract ores from deep within the earth",
   "authors": [
     "beeisyou"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://modrinth.com/mod/deepdrilling",
+    "sources": "https://github.com/NotSoEpic/deepdrilling"
   },
-  "license": "Insert License Here",
+  "license": "MIT",
   "icon": "assets/deepdrilling/icon.png",
   "environment": "*",
   "entrypoints": {

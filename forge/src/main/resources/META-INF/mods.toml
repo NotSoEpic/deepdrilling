@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[${forge_version},)"
-#issueTrackerURL = ""
-license = "Insert License Here"
+issueTrackerURL = "https://github.com/NotSoEpic/deepdrilling"
+license = "MIT"
 
 [[mods]]
 modId = "deepdrilling"
@@ -9,7 +9,7 @@ version = "${version}"
 displayName = "Deep Drilling"
 authors = "beeisyou"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+An addon for Create, adding powerful drills that extract ores from deep within the earth
 '''
 logoFile = "icon.png"
 
