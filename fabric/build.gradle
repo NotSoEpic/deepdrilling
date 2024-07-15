@@ -10,18 +10,21 @@ architectury {
 var generatedResources = file("src/main/generated") // project(":common").file("src/main/generated")
 
 loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-    /*
+    def common = project(":common")
+    accessWidenerPath = common.loom.accessWidenerPath
     runs {
-        datagen {
-            inherit server
-            name("Data Generation")
+        create("datagen") {
+            client()
+
+            name = "Minecraft Data"
             vmArg("-Dfabric-api.datagen")
-            vmArg("-Dfabric-api.datagen.output-dir=${generatedFile}")
-            vmArg("-Dfabric-api.datagen.modid=bingo")
+            vmArg("-Dfabric-api.datagen.output-dir=${common.file("src/generated/resources")}")
+            vmArg("-Dfabric-api.datagen.modid=${archives_base_name}")
+            vmArg("-Dporting_lib.datagen.existing_resources=${common.file("src/main/resources")}")
+
+            environmentVariable("DATAGEN", "TRUE")
         }
     }
-    */
 }
 
 configurations {
@@ -86,8 +89,10 @@ processResources {
     )
     properties.forEach((k, v) -> inputs.property(k, v))
 
-    // todo
-    // include(generatedResources.absolutePath)
+    from(project(":common").sourceSets.main.resources)
+    from(project(":forge").file('src/generated/simulated')) {
+        exclude('.cache/')
+    }
 
     filesMatching("fabric.mod.json") {
         expand properties

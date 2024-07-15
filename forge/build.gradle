@@ -16,18 +16,6 @@ loom {
     forge {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
-        dataGen {
-            mod("deepdrilling")
-        }
-    }
-
-    runs {
-        data {
-            data()
-            programArgs "--all", "--mod", "deepdrilling"
-            programArgs "--existing", existingResources.absolutePath
-            programArgs "--output", generatedResources.absolutePath
-        }
     }
 }
 
@@ -78,7 +66,7 @@ processResources {
     )
     properties.forEach((k, v) -> inputs.property(k, v))
 
-    // include(generatedResources.absolutePath)
+    from(project(":common").sourceSets.main.resources)
 
     filesMatching("META-INF/mods.toml") {
         expand properties

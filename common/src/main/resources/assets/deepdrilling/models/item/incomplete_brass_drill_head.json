@@ -1,6 +1,0 @@
-{
-	"parent": "deepdrilling:item/base_incomplete_drill_head",
-	"textures": {
-		"0": "create:block/brass_block"
-	}
-}

@@ -18,6 +18,9 @@
     "main": [
       "com.deepdrilling.fabric.DrillModFabric"
     ],
+    "fabric-datagen": [
+      "com.deepdrilling.fabric.DrillModDatagen"
+    ],
     "client": [
       "com.deepdrilling.fabric.DrillModClientFabric"
     ]

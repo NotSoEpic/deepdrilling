@@ -54,19 +54,21 @@ public class OreNodeFeature extends Feature<OreNodeConfiguration> {
 
         int offs = random.nextInt(layerStates.size());
 
-        // todo what the fuck does /place do to create phantom blocks
         // main ore
         for (int x = -16; x < 17; x++) {
             for (int z = -16; z < 17; z++) {
+                boolean hNearCom = false;
                 for (int y = 0; y < 35; y++) {
                     BlockPos pos = new BlockPos(x + origin.getX(), y + level.getMinBuildHeight(), z + origin.getZ());
                     if (y == 0) {
                         // place ore nodes at bedrock
                         double dx = x - blobCom.x;
                         double dz = z - blobCom.z;
-                        if (dx*dx + dz*dz <= 6) {
+                        double comDist = dx*dx + dz*dz;
+                        if (comDist <= 6) {
                             level.setBlock(pos, blockState, 0x10);
                         }
+                        hNearCom = comDist <= 8;
                     } else {
                         if (blobCom.subtract(x, y, z).lengthSqr() < 16) {
                             level.setBlock(pos, y < 4 ? Blocks.LAVA.defaultBlockState() : Blocks.AIR.defaultBlockState(), 0x10);
@@ -74,8 +76,7 @@ public class OreNodeFeature extends Feature<OreNodeConfiguration> {
                             double r = 0;
                             for (BlockPos blobPos : blobCenters) {
                                 Vec3 diff = Vec3.atCenterOf(blobPos);
-                                diff.add(new Vec3(-x, -y * 0.65, -z));
-                                r += diff.length();
+                                r += diff.add(-x, -y * 0.65, -z).length();
                             }
                             r /= blobCenters.size();
                             r += random.nextDouble() * 0.5;
@@ -84,7 +85,11 @@ public class OreNodeFeature extends Feature<OreNodeConfiguration> {
                             // layers of shell
                             if (idx < 10) {
                                 idx = (idx + offs) % layerStates.size();
-                                level.setBlock(pos, layerStates.get(idx), 0x10);
+                                boolean finalHNearCom = hNearCom;
+                                // some fucking how - using level.setBlock() creates phantom blocks with the /place command
+                                // this still does it too, but less blatantly worse
+                                safeSetBlock(level, pos, layerStates.get(idx),
+                                        state -> finalHNearCom || !state.is(Blocks.BEDROCK));
                             }
                         }
                     }

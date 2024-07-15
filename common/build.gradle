@@ -6,6 +6,14 @@ loom {
     accessWidenerPath = file("src/main/resources/deepdrilling.accesswidener")
 }
 
+sourceSets.main {
+    resources {
+        srcDir("src/generated/resources")
+        exclude(".cache/**")
+        exclude("assets/create/**")
+    }
+}
+
 repositories {
     // mavens for Create Fabric and dependencies
     maven { url = "https://api.modrinth.com/maven" } // LazyDFU
