@@ -23,6 +23,8 @@ repositories {
     maven { url = "https://maven.cafeteria.dev/releases" } // Fake Player API
     maven { url = "https://maven.jamieswhiteshirt.com/libs-release" } // Reach Entity Attributes
     maven { url = "https://jitpack.io/" } // Mixin Extras, Fabric ASM
+    maven { url = "https://maven.blamejared.com/" } // JEI
+    maven { url = "https://modmaven.dev" } // JEI mirror
 }
 
 dependencies {
@@ -35,6 +37,7 @@ dependencies {
     // All dependencies except Flywheel and Registrate are NOT safe to use!
     // Flywheel and Registrate must also be used carefully due to differences.
     modCompileOnly("com.simibubi.create:create-fabric-${minecraft_version}:${create_fabric_version}")
+    modCompileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
 }
 
 publishing {

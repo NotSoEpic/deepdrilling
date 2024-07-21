@@ -29,6 +29,7 @@ public class DrillModDatagen implements DataGeneratorEntrypoint {
 
             PonderLocalization.generateSceneLang();
             PonderLocalization.provideLang(DrillMod.MOD_ID, langConsumer);
+            langConsumer.accept("create.deepdrilling.recipe.ore_node", "Ore Node Drilling");
         });
 
 

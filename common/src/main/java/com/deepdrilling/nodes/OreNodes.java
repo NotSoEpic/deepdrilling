@@ -29,6 +29,10 @@ public class OreNodes {
         return get(block).getTable(level, type);
     }
 
+    public static Map<Block, OreNode> getNodes() {
+        return nodes;
+    }
+
     public static List<OreNodeFormat> prepare(ResourceManager manager) {
         ArrayList<OreNodeFormat> nodes = new ArrayList<>();
         manager.listResources("ore_nodes", resourceLocation -> true).forEach(
