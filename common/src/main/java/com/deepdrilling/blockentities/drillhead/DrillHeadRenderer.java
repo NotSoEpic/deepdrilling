@@ -1,5 +1,6 @@
 package com.deepdrilling.blockentities.drillhead;
 
+import com.deepdrilling.DPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -13,6 +14,6 @@ public class DrillHeadRenderer extends KineticBlockEntityRenderer<DrillHeadBE> {
 
     @Override
     protected SuperByteBuffer getRotatedModel(DrillHeadBE be, BlockState state) {
-        return CachedBufferer.partialFacing(DDrillHeads.getPartialModel(state), state);
+        return CachedBufferer.partialFacing(DPartialModels.getDrillHeadModel(state), state);
     }
 }

@@ -1,5 +1,6 @@
 package com.deepdrilling.blockentities.drillhead;
 
+import com.deepdrilling.DPartialModels;
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
@@ -18,6 +19,6 @@ public class DrillHeadInstance extends SingleRotatingInstance<DrillHeadBE> {
     protected Instancer<RotatingData> getModel() {
         BlockState referenceState = blockEntity.getBlockState();
         Direction facing = referenceState.getValue(BlockStateProperties.FACING);
-        return getRotatingMaterial().getModel(DDrillHeads.getPartialModel(referenceState), referenceState, facing);
+        return getRotatingMaterial().getModel(DPartialModels.getDrillHeadModel(referenceState), referenceState, facing);
     }
 }

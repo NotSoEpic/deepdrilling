@@ -25,7 +25,6 @@ public class DrillMod {
         DBlocks.init(); // hold registrate in a separate class to avoid loading early on forge
         DItems.init();
         DBlockEntities.init();
-        DPartialModels.init();
 
         // there are probably several better ways to do this whole process but this is the one I stumbled upon that actually worked
         DDrillHeads.registerBlockEntity();

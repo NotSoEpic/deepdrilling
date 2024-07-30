@@ -41,7 +41,7 @@ public class AnimatedDrill extends AnimatedKinetics {
                 .scale(scale)
                 .render(guiGraphics);
 
-        blockElement(DDrillHeads.getPartialModel(DDrillHeads.ANDESITE.getId()))
+        blockElement(DPartialModels.getDrillHeadModel(DDrillHeads.ANDESITE.getId()))
                 .atLocal(0, 0, -1)
                 .rotateBlock(0, 0, getCurrentAngle())
                 .scale(scale)

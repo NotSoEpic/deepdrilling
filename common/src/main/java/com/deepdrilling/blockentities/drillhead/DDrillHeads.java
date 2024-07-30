@@ -4,7 +4,6 @@ import com.deepdrilling.BlockstateHelper;
 import com.deepdrilling.DrillHeadStats;
 import com.deepdrilling.DrillMod;
 import com.deepdrilling.blocks.DrillHeadBlock;
-import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.kinetics.BlockStressDefaults;
 import com.simibubi.create.foundation.data.CreateBlockEntityBuilder;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -12,11 +11,8 @@ import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -25,15 +21,12 @@ import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
 public class DDrillHeads {
     public static final List<BlockEntry<DrillHeadBlock>> knownDrillHeads = new ArrayList<>();
-    public static final Map<ResourceLocation, PartialModel> partialModels = new HashMap<>();
 
     // only this stuff should need to be touched
     public static final BlockEntry<DrillHeadBlock> ANDESITE, BRASS, COPPER;
@@ -78,7 +71,6 @@ public class DDrillHeads {
                 .build()
                 .register();
         knownDrillHeads.add(block);
-        getPartialModel(block.getId());
         return block;
     }
 
@@ -95,17 +87,7 @@ public class DDrillHeads {
                 .register();
     }
 
-    public static PartialModel getPartialModel(ResourceLocation blockID) {
-        if (!partialModels.containsKey(blockID)) {
-            partialModels.put(blockID, new PartialModel(
-                    new ResourceLocation(blockID.getNamespace(), "block/" + blockID.getPath())
-            ));
-        }
-        return partialModels.get(blockID);
+    public static void init() {
+        DrillMod.LOGGER.info("Registred {} drill heads", knownDrillHeads.size());
     }
-    public static PartialModel getPartialModel(BlockState state) {
-        return getPartialModel(BuiltInRegistries.BLOCK.getKey(state.getBlock()));
-    }
-
-    public static void init() {}
 }
