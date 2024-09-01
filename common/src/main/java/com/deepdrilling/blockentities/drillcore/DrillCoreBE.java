@@ -1,8 +1,13 @@
 package com.deepdrilling.blockentities.drillcore;
 
 import com.deepdrilling.DrillHeadStats;
-import com.deepdrilling.blockentities.*;
+import com.deepdrilling.Truple;
+import com.deepdrilling.blockentities.ModuleBE;
 import com.deepdrilling.blockentities.drillhead.DrillHeadBE;
+import com.deepdrilling.blockentities.module.Modifier;
+import com.deepdrilling.blockentities.module.ModifierTypes;
+import com.deepdrilling.blockentities.module.Module;
+import com.deepdrilling.blocks.DrillCore;
 import com.deepdrilling.nodes.OreNode;
 import com.deepdrilling.nodes.OreNodes;
 import com.simibubi.create.content.kinetics.base.BlockBreakingKineticBlockEntity;
@@ -15,9 +20,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -30,25 +35,21 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /** lots of this is taken from {@link BlockBreakingKineticBlockEntity} */
 public class DrillCoreBE extends KineticBlockEntity {
-    protected int breakerId = -BlockBreakingKineticBlockEntity.NEXT_BREAKER_ID.incrementAndGet();
-    protected int ticksUntilProgress; // increments destroyProgress at 0, is -1 if not progressing at all
-    protected int destroyProgress;
-    protected BlockPos breakingPos;
+    private final int breakerId = -BlockBreakingKineticBlockEntity.NEXT_BREAKER_ID.incrementAndGet();
+    private int ticksUntilProgress; // increments destroyProgress at 0, is -1 if not progressing at all
+    private int destroyProgress;
+    private BlockPos breakingPos;
 
     // (distance from drill, interface instance)
-    protected List<IModule> modules = new ArrayList<>();
-    protected List<Tuple<Integer, IDrillSpeedMod>> speedModifiers = new ArrayList<>();
-    protected List<Tuple<Integer, IDrillCollector>> collectors = new ArrayList<>();
-    protected List<Tuple<Integer, IDrillDamageMod>> drillDamagers = new ArrayList<>();
-    protected List<Tuple<Integer, IResourceWeightMod>> weightMods = new ArrayList<>();
+    private List<Module> modules = new ArrayList<>();
+    // { modifierType: [(distance from core, associated BE, modifier)] }
+    private HashMap<Modifier.Type, List<Truple<Integer, BlockEntity, Modifier>>> modifiers = new HashMap<>();
 
     public DrillCoreBE(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -77,6 +78,16 @@ public class DrillCoreBE extends KineticBlockEntity {
         }
     }
 
+    // this is awful :3
+    public <T> T applyModifiers(T baseValue, Modifier.Type<T> type) {
+        T value = baseValue;
+        for (Truple<Integer, BlockEntity, Modifier> modifier : modifiers.getOrDefault(type, List.of())) {
+            value = (T) modifier.getC().modifier.apply(this, getDrillHead(), modifier.getB(), value, baseValue);
+        }
+        return value;
+    }
+
+
     // ticks per mining operation (will be affected by rounding)
     public double calculateSpeed() {
         if (getSpeed() == 0)
@@ -84,27 +95,15 @@ public class DrillCoreBE extends KineticBlockEntity {
         // 10 seconds at 256 rpm, 20s at 64, 40s at 16
         AtomicReference<Double> baseSpeed = new AtomicReference<>((20 * 10) / Math.sqrt(Math.abs(getSpeed() / 256f)));
         ifDrillHeadDo(drillHead -> baseSpeed.set(baseSpeed.get() * drillHead.getSpeedModifier()));
-        double finalSpeed = baseSpeed.get();
-        for (Tuple<Integer, IDrillSpeedMod> speedMod : speedModifiers) {
-            finalSpeed = speedMod.getB().modifySpeed(baseSpeed.get(), finalSpeed);
-        }
-        return finalSpeed;
+        return applyModifiers(baseSpeed.get(), ModifierTypes.SPEED);
     }
 
     public double calculateDamage() {
-        double damage = 1;
-        for (Tuple<Integer, IDrillDamageMod> damageMod : drillDamagers) {
-            damage = damageMod.getB().modifyDamage(damage);
-        }
-        return Math.max(damage, 0);
+        return Math.max(applyModifiers(1d, ModifierTypes.DAMAGE), 0);
     }
 
     public DrillHeadStats.WeightMultipliers getWeightMultipliers() {
-        DrillHeadStats.WeightMultipliers base = DrillHeadStats.WeightMultipliers.ONE;
-        for (Tuple<Integer, IResourceWeightMod> weightMod : weightMods) {
-            base = base.mul(weightMod.getB().getWeightMultiplier());
-        }
-        return base;
+        return applyModifiers(DrillHeadStats.WeightMultipliers.ONE, ModifierTypes.RESOURCE_WEIGHT);
     }
 
     public int ticksPerProgress() {
@@ -157,14 +156,8 @@ public class DrillCoreBE extends KineticBlockEntity {
     public void mineBlock(ServerLevel level) {
         findModules();
 
-        List<ItemStack> drops = getDrops(level);
+        List<ItemStack> drops = applyModifiers(getDrops(level), ModifierTypes.OUTPUT_LIST);
 
-        for (Tuple<Integer, IDrillCollector> collectorInfo : collectors) {
-            IDrillCollector collector = collectorInfo.getB();
-            drops = collector.collectItems(drops);
-            if (drops == null || drops.isEmpty())
-                return;
-        }
         for (ItemStack drop : drops) {
             ItemEntity item = new ItemEntity(level,
                     getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.5, getBlockPos().getZ() + 0.5,
@@ -178,47 +171,34 @@ public class DrillCoreBE extends KineticBlockEntity {
     public void findModules() {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         pos.set(getBlockPos());
-        Direction dir = getBlockState().getValue(com.deepdrilling.blocks.DrillCore.FACING).getOpposite();
+        Direction dir = getBlockState().getValue(DrillCore.FACING).getOpposite();
 
         modules.clear();
-        speedModifiers.clear();
-        collectors.clear();
-        drillDamagers.clear();
-        weightMods.clear();
+        modifiers.clear();
 
-        for (int i = 0; i < searchDist; i++) {
+        Set<ResourceLocation> uniqueNames = new HashSet<>();
+
+        for (int zingusValue = 0; zingusValue < searchDist; zingusValue++) {
             pos.move(dir);
             BlockEntity candidate = level.getBlockEntity(pos);
 
-            if (candidate instanceof IModule module &&
+            if (candidate instanceof ModuleBE module &&
                     module.getAxis() == getBlockState().getValue(com.deepdrilling.blocks.DrillCore.FACING).getAxis()) {
-                if (candidate instanceof IUniqueMod uniqueMod) {
-                    if (modules.stream().anyMatch(mod -> mod instanceof IUniqueMod uniqueMod2 &&
-                            (uniqueMod2.getIdentifier()).equals(uniqueMod.getIdentifier()))) {
-                        continue;
+                if (Collections.disjoint(uniqueNames, module.getMutuallyExclusiveNames())) {
+                    uniqueNames.addAll(module.getMutuallyExclusiveNames());
+
+                    modules.add(module);
+                    for (Modifier modifier : module.getModifiers()) {
+                        modifiers.computeIfAbsent(modifier.type, k -> new ArrayList<>())
+                                .add(new Truple<>(zingusValue, module, modifier));
                     }
                 }
-                modules.add(module);
-                if (candidate instanceof IDrillSpeedMod speedMod) {
-                    speedModifiers.add(new Tuple<>(i, speedMod));
-                }
-                if (candidate instanceof IDrillCollector collector) {
-                    collectors.add(new Tuple<>(i, collector));
-                }
-                if (candidate instanceof IDrillDamageMod damager) {
-                    drillDamagers.add(new Tuple<>(i, damager));
-                }
-                if (candidate instanceof IResourceWeightMod weighter) {
-                    weightMods.add(new Tuple<>(i, weighter));
-                }
-            } else {
-                break;
             }
         }
 
-        speedModifiers.sort(IDrillSpeedMod.drillCollectComparator);
-        collectors.sort(IDrillCollector.drillCollectComparator);
-        drillDamagers.sort(IDrillDamageMod.drillDamageComparator);
+        for (List<Truple<Integer, BlockEntity, Modifier>> modifierInstances : modifiers.values()) {
+            modifierInstances.sort(Modifier.modifierComparator);
+        }
     }
 
     @Override
@@ -241,7 +221,7 @@ public class DrillCoreBE extends KineticBlockEntity {
             Lang.text("Attached Modules:")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
-            for (IModule module : modules) {
+            for (Module module : modules) {
                 Lang.builder().space()
                         .add(module.getName())
                         .style(ChatFormatting.GRAY)

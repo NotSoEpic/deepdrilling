@@ -1,5 +1,7 @@
 package com.deepdrilling.blockentities;
 
+import com.deepdrilling.blockentities.module.Modifier;
+import com.deepdrilling.blockentities.module.ModifierTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -8,7 +10,6 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,14 +17,13 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class CollectorModuleBE extends ModuleBE implements IDrillCollector, Container {
+public class CollectorModuleBE extends ModuleBE implements Container {
     public final NonNullList<ItemStack> inventory;
     public CollectorModuleBE(BlockEntityType typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
         inventory = NonNullList.withSize(9, ItemStack.EMPTY);
     }
 
-    @Override
     public List<ItemStack> collectItems(List<ItemStack> items) {
         items.forEach(stack -> {
             long leftover = insert(stack);
@@ -31,6 +31,15 @@ public class CollectorModuleBE extends ModuleBE implements IDrillCollector, Cont
         });
         items = items.stream().filter(stack -> !stack.isEmpty()).toList();
         return items;
+    }
+
+    private static final Modifier<List, CollectorModuleBE> ITEM_COLLECTION = ModifierTypes.OUTPUT_LIST.create(
+            ((core, head, be, base, prev) -> be.collectItems(prev)), 0
+    );
+    private static final List<Modifier> MODIFIERS = List.of(ITEM_COLLECTION);
+    @Override
+    public List<Modifier> getModifiers() {
+        return MODIFIERS;
     }
 
     @Override
