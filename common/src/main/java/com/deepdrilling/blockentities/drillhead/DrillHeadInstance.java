@@ -14,11 +14,15 @@ public class DrillHeadInstance extends SingleRotatingInstance<DrillHeadBE> {
         super(materialManager, blockEntity);
     }
 
-//  todo: the culprit
     @Override
     protected Instancer<RotatingData> getModel() {
         BlockState referenceState = blockEntity.getBlockState();
         Direction facing = referenceState.getValue(BlockStateProperties.FACING);
+        // todo beat up flywheel until it behaves (glint rendertype is invisible for instances)
+//        return (blockEntity.isEnchanted() ?
+//                materialManager.solid(RenderType.glint()).material(AllMaterialSpecs.ROTATING)
+//                : getRotatingMaterial())
+//            .getModel(DPartialModels.getDrillHeadModel(referenceState), referenceState, facing);
         return getRotatingMaterial().getModel(DPartialModels.getDrillHeadModel(referenceState), referenceState, facing);
     }
 }

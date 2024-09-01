@@ -10,17 +10,30 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DrillHeadBE extends KineticBlockEntity {
-    protected double damage = 0;
+    private double damage = 0;
+    private boolean unbreakable = false;
+    private Map<Enchantment, Integer> enchantments = new HashMap<>();
+    private int enchUnbreaking = 0;
+    private int enchEfficiency = 0;
+    private int enchFortune = 0;
+    private boolean enchMending = false;
+
     public DrillHeadBE(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
     }
@@ -28,15 +41,28 @@ public class DrillHeadBE extends KineticBlockEntity {
     public void setDamage(double amount) {
         damage = amount;
         if (damage >= getMaxDamage()) {
-            level.destroyBlock(getBlockPos(), false);
-            return;
+            if (!unbreakable && !enchMending) {
+                level.destroyBlock(getBlockPos(), false);
+                return;
+            } else {
+                damage = getMaxDamage();
+            }
         }
         setChanged();
         sendData();
     }
 
+    public boolean isFunctional() {
+        if (enchMending) {
+            return damage < getMaxDamage();
+        }
+        return true;
+    }
+
     public void applyDamage(double amount) {
-        setDamage(damage + amount);
+        if (!unbreakable) {
+            setDamage(damage + amount / (1 + enchUnbreaking));
+        }
     }
 
     public double getMaxDamage() {
@@ -46,7 +72,16 @@ public class DrillHeadBE extends KineticBlockEntity {
 
     public double getSpeedModifier() {
         ResourceLocation name = BuiltInRegistries.BLOCK.getKey(getBlockState().getBlock());
-        return DrillHeadStats.DRILL_SPEED_MODIFIERS.getOrDefault(name, 1.0);
+        double speedStat = DrillHeadStats.DRILL_SPEED_MODIFIERS.getOrDefault(name, 1.0);
+        return speedStat / (1 + (double) enchEfficiency / 5);
+    }
+
+    public double getFortuneAmount() {
+        return (double) enchFortune / 3;
+    }
+
+    public boolean isEnchanted() {
+        return enchUnbreaking > 0 || enchEfficiency > 0 || enchFortune > 0 || enchMending;
     }
 
     public DrillHeadStats.WeightMultipliers getWeightMultipliers() {
@@ -54,38 +89,53 @@ public class DrillHeadBE extends KineticBlockEntity {
         return DrillHeadStats.LOOT_WEIGHT_MULTIPLIER.getOrDefault(name, DrillHeadStats.WeightMultipliers.ONE);
     }
 
-    public ItemStack setItemDamage(ItemStack item) {
+    public ItemStack writeItemNBT(ItemStack item) {
         CompoundTag tag = item.getOrCreateTag();
         tag.putInt("Damage", (int)damage);
+        tag.putBoolean("Unbreakable", unbreakable);
+        EnchantmentHelper.setEnchantments(enchantments, item);
         return item;
     }
 
-    public void applyItemDamage(ItemStack item) {
-        setDamage(item.getOrCreateTag().getInt("Damage"));
+    public void readItemNBT(ItemStack item) {
+        CompoundTag nbt = item.getOrCreateTag();
+        unbreakable = nbt.getBoolean("Unbreakable");
+        enchantments = EnchantmentHelper.getEnchantments(item);
+        updateCachedEnchantments();
+        setDamage(nbt.getInt("Damage"));
+    }
+
+    private void updateCachedEnchantments() {
+        enchUnbreaking = enchantments.getOrDefault(Enchantments.UNBREAKING, 0);
+        enchEfficiency = enchantments.getOrDefault(Enchantments.BLOCK_EFFICIENCY, 0);
+        enchFortune = enchantments.getOrDefault(Enchantments.BLOCK_FORTUNE, 0);
+        enchMending = enchantments.getOrDefault(Enchantments.MENDING, 0) > 0;
     }
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
-        Lang.text("Head Durability:").style(ChatFormatting.GRAY).forGoggles(tooltip);
-        double fractDamage = damage / getMaxDamage();
-        ChatFormatting formatting;
-        if (fractDamage < 0.25) {
-            formatting = ChatFormatting.GREEN;
-        } else if (fractDamage < 0.5) {
-            formatting = ChatFormatting.YELLOW;
-        } else if (fractDamage < 0.75) {
-            formatting = ChatFormatting.GOLD;
-        } else {
-            formatting = ChatFormatting.RED;
-        }
-        Lang.builder().space()
-                .text(LangNumberFormat.format((int)(getMaxDamage() - damage)))
+        if (!unbreakable) {
+            Lang.text("Head Durability:").style(ChatFormatting.GRAY).forGoggles(tooltip);
+            double fractDamage = damage / getMaxDamage();
+            ChatFormatting formatting;
+            if (fractDamage < 0.25) {
+                formatting = ChatFormatting.GREEN;
+            } else if (fractDamage < 0.5) {
+                formatting = ChatFormatting.YELLOW;
+            } else if (fractDamage < 0.75) {
+                formatting = ChatFormatting.GOLD;
+            } else {
+                formatting = ChatFormatting.RED;
+            }
+            Lang.builder().space()
+                    .text(LangNumberFormat.format((int) (getMaxDamage() - damage)))
                     .style(formatting)
-                .add(Lang.text(String.format(" / %s", (int)getMaxDamage()))
-                    .style(ChatFormatting.DARK_GRAY))
-                .forGoggles(tooltip);
+                    .add(Lang.text(String.format(" / %s", (int) getMaxDamage()))
+                            .style(ChatFormatting.DARK_GRAY))
+                    .forGoggles(tooltip);
+        }
         return true;
     }
 
@@ -109,16 +159,31 @@ public class DrillHeadBE extends KineticBlockEntity {
     }
 
     public static String DAMAGE_KEY = "Damage";
+    public static String UNBREAKABLE_KEY = "Unbreakable";
+    public static String ENCHANTMENTS_KEY = "Enchantments";
 
     @Override
     protected void read(CompoundTag compound, boolean clientPacket) {
         super.read(compound, clientPacket);
         damage = compound.getDouble(DAMAGE_KEY);
+        unbreakable = compound.getBoolean(UNBREAKABLE_KEY);
+        enchantments = EnchantmentHelper.deserializeEnchantments(compound.getList(ENCHANTMENTS_KEY, CompoundTag.TAG_COMPOUND));
+        updateCachedEnchantments();
     }
 
     @Override
     protected void write(CompoundTag compound, boolean clientPacket) {
         super.write(compound, clientPacket);
         compound.putDouble(DAMAGE_KEY, damage);
+        compound.putBoolean(UNBREAKABLE_KEY, unbreakable);
+        // thank you enchantment helper for being so helpful
+        ListTag listTag = new ListTag();
+        for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+            Enchantment enchantment = entry.getKey();
+            if (enchantment != null) {
+                listTag.add(EnchantmentHelper.storeEnchantment(EnchantmentHelper.getEnchantmentId(enchantment), entry.getValue()));
+            }
+        }
+        compound.put(ENCHANTMENTS_KEY, listTag);
     }
 }

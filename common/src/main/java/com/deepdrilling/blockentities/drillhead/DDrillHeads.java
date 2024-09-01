@@ -46,6 +46,8 @@ public class DDrillHeads {
                 (tables.applyExplosionCondition(block, LootPool.lootPool())).setRolls(ConstantValue.exactly(1)).add(
                         LootItem.lootTableItem(block).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
                                         .copy("Damage", "Damage")
+                                        .copy("Unbreakable", "Unbreakable")
+                                        .copy("Enchantments", "Enchantments")
                         )))
         );
     }

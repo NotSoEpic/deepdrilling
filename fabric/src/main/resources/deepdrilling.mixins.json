@@ -6,6 +6,7 @@
   "client": [
   ],
   "mixins": [
+    "DrillHeadItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

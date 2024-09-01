@@ -44,7 +44,7 @@ public class DrillHeadBlock extends DirectionalKineticBlock implements IBE<Drill
             .forDirectional();
 
     public static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
-    public static final ResourceLocation DRILL_DURABILITY = DrillMod.id("drill_durability");
+    public static final ResourceLocation DRILL_DATA = DrillMod.id("drill_data");
     public DrillHeadBlock(Properties properties) {
         super(properties);
     }
@@ -53,8 +53,8 @@ public class DrillHeadBlock extends DirectionalKineticBlock implements IBE<Drill
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         BlockEntity blockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (blockEntity instanceof DrillHeadBE drillHeadBE) {
-            builder = builder.withDynamicDrop(DRILL_DURABILITY, (consumer) -> {
-                consumer.accept(drillHeadBE.setItemDamage(state.getBlock().asItem().getDefaultInstance()));
+            builder = builder.withDynamicDrop(DRILL_DATA, (consumer) -> {
+                consumer.accept(drillHeadBE.writeItemNBT(state.getBlock().asItem().getDefaultInstance()));
             });
         }
         return super.getDrops(state, builder);
@@ -64,7 +64,7 @@ public class DrillHeadBlock extends DirectionalKineticBlock implements IBE<Drill
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(worldIn, pos, state, placer, stack);
 
-        withBlockEntityDo(worldIn, pos, (drillHeadBE) -> drillHeadBE.applyItemDamage(stack));
+        withBlockEntityDo(worldIn, pos, (drillHeadBE) -> drillHeadBE.readItemNBT(stack));
     }
 
     @Override

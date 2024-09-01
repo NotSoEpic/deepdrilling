@@ -131,6 +131,7 @@ public class DrillCoreBE extends KineticBlockEntity {
         return !state.liquid() &&
                 !state.isAir() &&
                 getDrillHead() != null &&
+                getDrillHead().isFunctional() &&
                 OreNodes.get(state.getBlock()).hasTables();
     }
 
@@ -142,10 +143,15 @@ public class DrillCoreBE extends KineticBlockEntity {
 
         LootTable lootTable = node.getTable(level, type);
         // todo: proper lootcontextparam
-        LootParams lootParams = (new LootParams.Builder(level))
+        LootParams lootParams = new LootParams.Builder(level)
                 .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(getBreakingPosition()))
                 .create(LootContextParamSets.ARCHAEOLOGY);
-        return lootTable.getRandomItems(lootParams);
+        List<ItemStack> drops = new ArrayList<>();
+        double dropCount = drillHead.getFortuneAmount() + 1;
+        while (dropCount-- > level.random.nextFloat()) {
+            drops.addAll(lootTable.getRandomItems(lootParams));
+        }
+        return drops;
     }
 
     public void mineBlock(ServerLevel level) {

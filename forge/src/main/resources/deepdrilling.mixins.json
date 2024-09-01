@@ -6,8 +6,9 @@
   "client": [
   ],
   "mixins": [
+    "CapabilityProviderMixin",
     "CollectorModuleBEMixin",
-    "CapabilityProviderMixin"
+    "DrillHeadItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1
