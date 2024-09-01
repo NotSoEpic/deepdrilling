@@ -1,6 +1,7 @@
 package com.deepdrilling;
 
 import com.deepdrilling.blockentities.CollectorModuleBE;
+import com.deepdrilling.blockentities.FluidTankBlockEntity;
 import com.deepdrilling.blockentities.SludgePumpModuleBE;
 import com.deepdrilling.blockentities.drillcore.DrillCoreBE;
 import com.deepdrilling.blockentities.drillcore.DrillCoreInstance;
@@ -44,6 +45,12 @@ public class DBlockEntities {
             .instance(() -> ShaftInstance::new)
             .validBlocks(DBlocks.SLUDGE_PUMP)
             .renderer(() -> ShaftRenderer::new)
+            .register();
+
+    public static final BlockEntityEntry<FluidTankBlockEntity> TEST_TANK = DrillMod.REGISTRATE
+            .blockEntity("test_tank", FluidTankBlockEntity::new)
+            .transform(builder -> FluidTankAssociations.associate(builder, (tank -> tank.tank)))
+            .validBlocks(DBlocks.TEST_TANK)
             .register();
 
     public static void init() {

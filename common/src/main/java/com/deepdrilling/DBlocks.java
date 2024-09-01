@@ -132,6 +132,10 @@ public class DBlocks {
 			.build()
 			.register();
 
+	public static final BlockEntry<FluidTankBlock> TEST_TANK = DrillMod.REGISTRATE
+			.block("test_tank", FluidTankBlock::new)
+			.register();
+
 	public static void init() {
 		DrillMod.LOGGER.info("Registering blocks for " + DrillMod.NAME);
 	}
