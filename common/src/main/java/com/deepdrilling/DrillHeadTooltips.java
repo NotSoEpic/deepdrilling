@@ -4,7 +4,9 @@ import com.deepdrilling.blockentities.drillhead.DDrillHeads;
 import com.simibubi.create.content.equipment.goggles.GogglesItem;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
 import com.simibubi.create.foundation.utility.LangNumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -54,13 +56,13 @@ public class DrillHeadTooltips implements TooltipModifier {
         return 2;
     }
 
-    public static String makeProbabilityMultiplier(double factor, boolean numbers, String suffix) {
-        String bar = TooltipHelper.makeProgressBar(3, barLengthProbability(factor));
+    public static LangBuilder makeProbabilityMultiplier(double factor, boolean numbers, String suffix) {
+        LangBuilder bar = Lang.builder().text(TooltipHelper.makeProgressBar(3, barLengthProbability(factor)));
         if (numbers)
-            bar += LangNumberFormat.format(factor) + "x";
+            bar.text(LangNumberFormat.format(factor) + "x");
         if (!Objects.equals(suffix, ""))
-            bar += " " + suffix;
-        return bar;
+            bar.add(Components.translatable(suffix));
+        return bar.style(DrillHeadTooltips.mulColor(factor));
     }
 
     public static ChatFormatting speedColor(double speed) {

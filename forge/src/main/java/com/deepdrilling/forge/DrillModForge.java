@@ -1,6 +1,7 @@
 package com.deepdrilling.forge;
 
 import com.deepdrilling.DrillMod;
+import com.deepdrilling.fluid.forge.FluidsImpl;
 import com.deepdrilling.forge.worldgen.OreNodeManager;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
@@ -28,6 +29,7 @@ public class DrillModForge {
         // registrate must be given the mod event bus on forge before registration
         DrillMod.REGISTRATE.registerEventListeners(BUS);
         DrillMod.init();
+        FluidsImpl.init();
         OreNodeManager.init(BUS);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {

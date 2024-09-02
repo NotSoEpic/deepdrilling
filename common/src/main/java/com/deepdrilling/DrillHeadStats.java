@@ -111,16 +111,15 @@ public class DrillHeadStats {
 
         public void addTooltip(List<Component> list, boolean hasGoggles, boolean showRedundant) {
             if (showRedundant || earth != 1)
-                addCollectionModifier(list, earth, hasGoggles, "Junk");
+                addCollectionModifier(list, earth, hasGoggles, "deepdrilling.loot.earth");
             if (showRedundant || common != 1)
-                addCollectionModifier(list, common, hasGoggles, "Common");
+                addCollectionModifier(list, common, hasGoggles, "deepdrilling.loot.common");
             if (showRedundant || rare != 1)
-                addCollectionModifier(list, rare, hasGoggles, "Precious");
+                addCollectionModifier(list, rare, hasGoggles, "deepdrilling.loot.rare");
         }
 
         private static void addCollectionModifier(List<Component> list, double mod, boolean goggles, String name) {
-            Lang.builder().add(Lang.text(DrillHeadTooltips.makeProbabilityMultiplier(mod, goggles, name))
-                    .style(DrillHeadTooltips.mulColor(mod))).addTo(list);
+            Lang.builder().add(DrillHeadTooltips.makeProbabilityMultiplier(mod, goggles, name)).addTo(list);
         }
     }
 }

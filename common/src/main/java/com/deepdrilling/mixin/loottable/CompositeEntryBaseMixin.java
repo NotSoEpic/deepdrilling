@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(CompositeEntryBase.class)
 public interface CompositeEntryBaseMixin {
-    @Accessor(value = "children")
+    @Accessor(value = "children", remap = false)
     LootPoolEntryContainer[] getChildren();
 }

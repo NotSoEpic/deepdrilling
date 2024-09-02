@@ -2,7 +2,7 @@ package com.deepdrilling.blocks;
 
 import com.deepdrilling.DBlockEntities;
 import com.deepdrilling.DrillHeadStats;
-import com.deepdrilling.blockentities.SludgePumpModuleBE;
+import com.deepdrilling.blockentities.sludgepump.SludgePumpModuleBE;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class SludgePumpModuleBlock extends ModuleBlock<SludgePumpModuleBE> implements IModuleTooltip {

@@ -20,6 +20,13 @@ public interface Module {
     List<Modifier> getModifiers();
 
 
+    /**
+     * Called 10 times per block broken, once every time the breaking progress is updated
+     */
     default void progressBreaking(DrillCoreBE drill) {}
+
+    /**
+     * Called every time breaking progress is reset, just before items are dropped
+     */
     default void blockBroken(DrillCoreBE drill) {}
 }

@@ -4,6 +4,7 @@ import com.deepdrilling.DrillHeadTooltips;
 import com.deepdrilling.DrillMod;
 import com.deepdrilling.ModuleStatTooltips;
 import com.deepdrilling.fabric.worldgen.OreNodeManager;
+import com.deepdrilling.fluid.fabric.FluidsImpl;
 import com.deepdrilling.nodes.LootParser;
 import com.deepdrilling.nodes.OreNodes;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -30,6 +31,7 @@ public class DrillModFabric implements ModInitializer {
 
 //        DrillMod.BASE_CREATIVE_TAB = new DrillCreativeTab(ItemGroupUtil.expandArrayAndGetId(), "deepdrilling.creative_tab");
         DrillMod.init();
+        FluidsImpl.init();
         DrillMod.LOGGER.info(EnvExecutor.unsafeRunForDist(
                 () -> () -> "{} is accessing Porting Lib on a Fabric client!",
                 () -> () -> "{} is accessing Porting Lib on a Fabric server!"

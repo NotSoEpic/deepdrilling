@@ -13,6 +13,13 @@ public class SingleTank {
         this.capacity = FluidTankAssociations.mbToLoaderUnits(capacity);
     }
 
+    /**
+     * @return fluid amount in millibuckets. <strong>Will round away droplets in fabric</strong>
+     */
+    public long getMbAmount() {
+        return FluidTankAssociations.loaderUnitsToMB(this.amount);
+    }
+
     static long calculateInsert(SingleTank tank, CFluidType insertedType, long maxAmount) {
         if (insertedType.equals(tank.type) || tank.type.isBlank()) {
             return Math.min(maxAmount, tank.capacity - tank.amount);
@@ -66,7 +73,7 @@ public class SingleTank {
      * @param extractedType The type of fluid
      * @param maxAmount     The amount attempted to extract
      * @param simulate      Whether this action shouldn't be applied - always false on fabric, which uses snapshots and rollback
-     * @param beforeApply  Used for fabric transaction snapshotting
+     * @param beforeApply   Used for fabric transaction snapshotting
      * @return The amount actually extracted
      */
     public long extract(CFluidType extractedType, long maxAmount, boolean simulate, @Nullable Runnable beforeApply) {

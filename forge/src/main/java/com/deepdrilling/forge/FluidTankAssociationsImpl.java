@@ -18,4 +18,8 @@ public class FluidTankAssociationsImpl {
     public static long mbToLoaderUnits(long mb) {
         return mb;
     }
+
+    public static long loaderUnitsToMB(long mb) {
+        return mb;
+    }
 }

@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(LootPool.class)
 public interface LootPoolAccessor {
-    @Accessor(value = "entries")
+    @Accessor(value = "entries", remap = false)
     LootPoolEntryContainer[] getEntries();
 }

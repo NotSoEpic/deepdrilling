@@ -1,6 +1,6 @@
 package com.deepdrilling.blocks;
 
-import com.deepdrilling.blockentities.ModuleBE;
+import com.deepdrilling.blockentities.module.ModuleBE;
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;

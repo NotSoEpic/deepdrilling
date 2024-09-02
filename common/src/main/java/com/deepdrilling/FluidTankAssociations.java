@@ -23,4 +23,14 @@ public class FluidTankAssociations {
     public static long mbToLoaderUnits(long mb) {
         throw new AssertionError();
     }
+
+    /**
+     * Converts droplets to mb on fabric. <strong>Will round droplets in fabric</strong>
+     * @param unit value in mb on forge, value in droplets on fabric
+     * @return / 1 (forge), / 81 (fabric)
+     */
+    @ExpectPlatform
+    public static long loaderUnitsToMB(long unit) {
+        throw new AssertionError();
+    }
 }

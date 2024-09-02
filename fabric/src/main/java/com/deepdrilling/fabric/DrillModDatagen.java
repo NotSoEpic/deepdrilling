@@ -33,10 +33,14 @@ public class DrillModDatagen implements DataGeneratorEntrypoint {
             langConsumer.accept("deepdrilling.loot.earth", "Earth");
             langConsumer.accept("deepdrilling.loot.common", "Common");
             langConsumer.accept("deepdrilling.loot.rare", "Rare");
+
+            langConsumer.accept("deepdrilling.goggle.sludge_pump.backed_up", "Backed up");
         });
 
 
         pack.addProvider(DrillSequencedRecipes::new);
+        // different fluid constants between forge/fabric fuck everything up
+//        pack.addProvider(MixingRecipes::new);
 
         /*
         TODO datagen maybe idk
@@ -45,8 +49,5 @@ public class DrillModDatagen implements DataGeneratorEntrypoint {
          - configured + placed features
          - biome tags
          */
-    }
-
-    public static void modelWithParentAndTexture() {
     }
 }

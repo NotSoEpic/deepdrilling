@@ -2,6 +2,7 @@ package com.deepdrilling.blockentities;
 
 import com.deepdrilling.blockentities.module.Modifier;
 import com.deepdrilling.blockentities.module.ModifierTypes;
+import com.deepdrilling.blockentities.module.ModuleBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;

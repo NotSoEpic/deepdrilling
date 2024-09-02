@@ -18,6 +18,7 @@ public class DItems {
                         .texture("0", "create:block/brass_block");
             })
             .register();
+
     public static void init() {
 
     }

@@ -2,7 +2,7 @@ package com.deepdrilling.blockentities.drillcore;
 
 import com.deepdrilling.DrillHeadStats;
 import com.deepdrilling.Truple;
-import com.deepdrilling.blockentities.ModuleBE;
+import com.deepdrilling.blockentities.module.ModuleBE;
 import com.deepdrilling.blockentities.drillhead.DrillHeadBE;
 import com.deepdrilling.blockentities.module.Modifier;
 import com.deepdrilling.blockentities.module.ModifierTypes;
@@ -80,7 +80,7 @@ public class DrillCoreBE extends KineticBlockEntity {
     public <T> T applyModifiers(T baseValue, Modifier.Type<T> type) {
         T value = baseValue;
         for (Truple<Integer, BlockEntity, Modifier> modifier : modifiers.getOrDefault(type, List.of())) {
-            value = (T) modifier.getC().modifier.apply(this, getDrillHead(), modifier.getB(), value, baseValue);
+            value = (T) modifier.getC().modifier.apply(this, getDrillHead(), modifier.getB(), baseValue, value);
         }
         return value;
     }

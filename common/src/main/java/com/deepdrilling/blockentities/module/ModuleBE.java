@@ -1,4 +1,4 @@
-package com.deepdrilling.blockentities;
+package com.deepdrilling.blockentities.module;
 
 import com.deepdrilling.blockentities.drillcore.DrillCoreBE;
 import com.deepdrilling.blockentities.module.Module;

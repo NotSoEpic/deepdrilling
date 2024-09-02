@@ -1,7 +1,7 @@
 package com.deepdrilling.forge.mixin;
 
 import com.deepdrilling.blockentities.CollectorModuleBE;
-import com.deepdrilling.blockentities.ModuleBE;
+import com.deepdrilling.blockentities.module.ModuleBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;

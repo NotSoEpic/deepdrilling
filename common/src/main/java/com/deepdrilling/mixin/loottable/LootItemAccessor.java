@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(LootItem.class)
 public interface LootItemAccessor {
-    @Accessor(value = "item")
+    @Accessor(value = "item", remap = false)
     Item getItem();
 }
