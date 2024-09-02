@@ -4,6 +4,7 @@ import com.deepdrilling.DrillHeadTooltips;
 import com.deepdrilling.DrillMod;
 import com.deepdrilling.ModuleStatTooltips;
 import com.deepdrilling.fabric.worldgen.OreNodeManager;
+import com.deepdrilling.nodes.LootParser;
 import com.deepdrilling.nodes.OreNodes;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
@@ -11,6 +12,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
@@ -50,5 +52,18 @@ public class DrillModFabric implements ModInitializer {
                 OreNodes.doBoth(manager);
             }
         });
+
+        ServerLifecycleEvents.START_DATA_PACK_RELOAD.register(((server, resourceManager) -> {
+            LootParser.invalidate();
+        }));
+
+        // loaded in sendToPlayer()
+//        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(((server, resourceManager, success) -> {
+//            LootParser.parseOreNodes(server.getLootData(), OreNodes.getNodeMap());
+//        }));
+
+        ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register(((player, joined) -> {
+            LootParser.sendToPlayer(player);
+        }));
     }
 }

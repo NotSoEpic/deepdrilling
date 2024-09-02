@@ -1,13 +1,21 @@
 package com.deepdrilling.jei;
 
+import com.deepdrilling.nodes.LootParser;
+import com.deepdrilling.nodes.OreNodes;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+
+import java.awt.*;
 
 public class OreNodeCategory extends CreateRecipeCategory<FakeOreNodeRecipe> {
     AnimatedDrill drill = new AnimatedDrill();
@@ -27,9 +35,32 @@ public class OreNodeCategory extends CreateRecipeCategory<FakeOreNodeRecipe> {
                 .setBackground(getRenderedSlot(), -1, -1)
                 .addItemStack(recipe.nodeBlock);
 
-//        builder.addSlot(RecipeIngredientRole.INPUT, 20, 0)
-//                .setBackground(getRenderedSlot(), -1, -1)
-//                .addItemStack(recipe.awaw);
+        if (recipe.nodeBlock.getItem() instanceof BlockItem blockItem) {
+            LootParser.LootEntry lootEntry = LootParser.knownTables.get(OreNodes.getNodeMap().get(blockItem.getBlock()));
+            if (lootEntry != null) {
+                int x = 70;
+                for (Item item : lootEntry.earth()) {
+                    builder.addSlot(RecipeIngredientRole.OUTPUT, x, 14)
+                            .setBackground(getRenderedSlot(0), -1, -1)
+                            .addItemStack(new ItemStack(item));
+                    x += 19;
+                }
+                x = 70;
+                for (Item item : lootEntry.common()) {
+                    builder.addSlot(RecipeIngredientRole.OUTPUT, x, 44)
+                            .setBackground(getRenderedSlot(0), -1, -1)
+                            .addItemStack(new ItemStack(item));
+                    x += 19;
+                }
+                x = 70;
+                for (Item item : lootEntry.rare()) {
+                    builder.addSlot(RecipeIngredientRole.OUTPUT, x, 74)
+                            .setBackground(getRenderedSlot(0), -1, -1)
+                            .addItemStack(new ItemStack(item));
+                    x += 19;
+                }
+            }
+        }
     }
 
     @Override
@@ -42,5 +73,8 @@ public class OreNodeCategory extends CreateRecipeCategory<FakeOreNodeRecipe> {
             drill.draw(guiGraphics, 30, 60);
         }
 
+        guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("deepdrilling.loot.earth"), 70, 4, Color.WHITE.getRGB());
+        guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("deepdrilling.loot.common"), 70, 34, Color.WHITE.getRGB());
+        guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("deepdrilling.loot.rare"), 70, 64, Color.WHITE.getRGB());
     }
 }

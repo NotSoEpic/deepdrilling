@@ -4,8 +4,12 @@
   "package": "com.deepdrilling.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "ClientPacketListenerMixin"
   ],
   "mixins": [
+    "loottable.CompositeEntryBaseMixin",
+    "loottable.LootItemAccessor",
+    "loottable.LootPoolAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

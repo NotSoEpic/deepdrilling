@@ -14,33 +14,33 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class OreNodes {
-    private static Map<Block, OreNode> nodes = ImmutableMap.of();
+    private static Map<Block, OreNode> nodeMap = ImmutableMap.of();
+
 
     public static OreNode get(Block block) {
-        return nodes.getOrDefault(block, OreNode.EMPTY);
+        return nodeMap.getOrDefault(block, OreNode.EMPTY);
     }
 
     public static LootTable get(Block block, OreNode.LOOT_TYPE type, ServerLevel level) {
         return get(block).getTable(level, type);
     }
 
-    public static Map<Block, OreNode> getNodes() {
-        return nodes;
+    public static Map<Block, OreNode> getNodeMap() {
+        return nodeMap;
     }
 
-    public static List<OreNodeFormat> prepare(ResourceManager manager) {
-        ArrayList<OreNodeFormat> nodes = new ArrayList<>();
+    public static HashMap<ResourceLocation, OreNodeFormat> prepare(ResourceManager manager) {
+        HashMap<ResourceLocation, OreNodeFormat> nodes = new HashMap<>();
         manager.listResources("ore_nodes", resourceLocation -> true).forEach(
                 ((resourceLocation, resource) -> {
                     try {
                         Reader reader = new InputStreamReader(resource.open());
                         OreNodeFormat json = new Gson().fromJson(reader, OreNodeFormat.class);
-                        nodes.add(json);
+                        nodes.put(resourceLocation, json);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -49,17 +49,18 @@ public class OreNodes {
         return nodes;
     }
 
-    public static void apply(List<OreNodeFormat> nodeList) {
+    public static void apply(HashMap<ResourceLocation, OreNodeFormat> nodeList) {
         ImmutableMap.Builder<Block, OreNode> builder = ImmutableMap.builder();
-        for (OreNodeFormat node : nodeList) {
-            Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(node.block));
+        for (Map.Entry<ResourceLocation, OreNodeFormat> entry : nodeList.entrySet()) {
+            Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(entry.getValue().block));
             if (block != Blocks.AIR) {
-                builder.put(block, new OreNode(node.loot_tables));
+                OreNode node = new OreNode(entry.getKey(), entry.getValue().loot_tables);
+                builder.put(block, node);
             } else {
-                DrillMod.LOGGER.error("Could not find block " + node.block);
+                DrillMod.LOGGER.error("Could not find block " + entry.getValue().block);
             }
         }
-        nodes = builder.build();
+        nodeMap = builder.build();
     }
 
     public static void doBoth(ResourceManager manager) {

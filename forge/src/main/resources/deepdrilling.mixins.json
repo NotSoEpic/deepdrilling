@@ -8,7 +8,8 @@
   "mixins": [
     "CapabilityProviderMixin",
     "CollectorModuleBEMixin",
-    "DrillHeadItemMixin"
+    "DrillHeadItemMixin",
+    "LootTableAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
