@@ -1,0 +1,19 @@
+{
+  "type": "create:mixing",
+  "heatRequirement": "heated",
+  "ingredients": [
+    {
+      "item": "create:cinder_flour"
+    },
+    {
+      "amount": 250,
+      "fluid": "deepdrilling:sludge",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:netherrack"
+    }
+  ]
+}
