@@ -64,7 +64,11 @@ public class DrillHeadBlock extends DirectionalKineticBlock implements IBE<Drill
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(worldIn, pos, state, placer, stack);
 
-        withBlockEntityDo(worldIn, pos, (drillHeadBE) -> drillHeadBE.readItemNBT(stack));
+        withBlockEntityDo(worldIn, pos, (drillHeadBE) -> {
+            drillHeadBE.readItemNBT(stack);
+            if (drillHeadBE.getCore() != null)
+                drillHeadBE.getCore().findModules();
+        });
     }
 
     @Override

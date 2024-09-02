@@ -35,7 +35,7 @@ public class Modifier<V, B> {
 
     @FunctionalInterface
     public interface Modify<v, b> {
-        v apply(DrillCoreBE core, DrillHeadBE head, b blockEntity, v base, v prev);
+        v apply(DrillCoreBE core, DrillHeadBE head, b be, v base, v prev);
     }
 
     int getPriority() {

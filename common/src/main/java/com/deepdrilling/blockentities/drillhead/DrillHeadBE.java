@@ -2,6 +2,8 @@ package com.deepdrilling.blockentities.drillhead;
 
 import com.deepdrilling.DrillHeadStats;
 import com.deepdrilling.blockentities.drillcore.DrillCoreBE;
+import com.deepdrilling.blockentities.module.Modifier;
+import com.deepdrilling.blockentities.module.ModifierTypes;
 import com.deepdrilling.blocks.DrillHeadBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.Lang;
@@ -52,16 +54,9 @@ public class DrillHeadBE extends KineticBlockEntity {
         sendData();
     }
 
-    public boolean isFunctional() {
-        if (enchMending) {
-            return damage < getMaxDamage();
-        }
-        return true;
-    }
-
     public void applyDamage(double amount) {
         if (!unbreakable) {
-            setDamage(damage + amount / (1 + enchUnbreaking));
+            setDamage(damage + amount);
         }
     }
 
@@ -70,23 +65,54 @@ public class DrillHeadBE extends KineticBlockEntity {
         return DrillHeadStats.DRILL_DURABILITY.getOrDefault(name, 100.0);
     }
 
-    public double getSpeedModifier() {
-        ResourceLocation name = BuiltInRegistries.BLOCK.getKey(getBlockState().getBlock());
-        double speedStat = DrillHeadStats.DRILL_SPEED_MODIFIERS.getOrDefault(name, 1.0);
-        return speedStat / (1 + (double) enchEfficiency / 5);
-    }
-
-    public double getFortuneAmount() {
-        return (double) enchFortune / 3;
-    }
-
     public boolean isEnchanted() {
         return enchUnbreaking > 0 || enchEfficiency > 0 || enchFortune > 0 || enchMending;
     }
 
-    public DrillHeadStats.WeightMultipliers getWeightMultipliers() {
+
+    private boolean isFunctional() {
+        if (enchMending) {
+            return damage < getMaxDamage();
+        }
+        return true;
+    }
+    private static final Modifier<Boolean, DrillHeadBE> MODIFIER_FUNCTION = ModifierTypes.CAN_FUNCTION.create(
+            ((core, head, be, base, prev) -> prev && be.isFunctional()), 0
+    );
+
+    private double getSpeedModifier() {
+        ResourceLocation name = BuiltInRegistries.BLOCK.getKey(getBlockState().getBlock());
+        double speedStat = DrillHeadStats.DRILL_SPEED_MODIFIERS.getOrDefault(name, 1.0);
+        return speedStat / (1 + (double) enchEfficiency / 5);
+    }
+    private static final Modifier<Double, DrillHeadBE> MODIFIER_SPEED = ModifierTypes.SPEED.create(
+            ((core, head, be, base, prev) -> prev * be.getSpeedModifier()), 1000
+    );
+
+    private double getDamageModifier() {
+        return 1D / (1 + enchUnbreaking);
+    }
+    private static final Modifier<Double, DrillHeadBE> MODIFIER_DAMAGE = ModifierTypes.DAMAGE.create(
+            ((core, head, be, base, prev) -> prev * be.getDamageModifier()), -1000
+    );
+
+    private double getFortuneAmount() {
+        return (double) enchFortune / 3;
+    }
+    private static final Modifier<Double, DrillHeadBE> MODIFIER_FORTUNE = ModifierTypes.FORTUNE.create(
+            ((core, head, be, base, prev) -> prev + be.getFortuneAmount()), 1000
+    );
+
+    private DrillHeadStats.WeightMultipliers getWeightMultipliers() {
         ResourceLocation name = BuiltInRegistries.BLOCK.getKey(getBlockState().getBlock());
         return DrillHeadStats.LOOT_WEIGHT_MULTIPLIER.getOrDefault(name, DrillHeadStats.WeightMultipliers.ONE);
+    }
+    private static final Modifier<DrillHeadStats.WeightMultipliers, DrillHeadBE> MODIFIER_WEIGHTS = ModifierTypes.RESOURCE_WEIGHT.create(
+            ((core, head, be, base, prev) -> prev.mul(be.getWeightMultipliers())), 1000
+    );
+
+    public List<Modifier> getModifiers() {
+        return List.of(MODIFIER_FUNCTION, MODIFIER_SPEED, MODIFIER_DAMAGE, MODIFIER_FORTUNE, MODIFIER_WEIGHTS);
     }
 
     public ItemStack writeItemNBT(ItemStack item) {

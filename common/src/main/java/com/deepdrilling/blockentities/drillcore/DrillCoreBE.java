@@ -13,7 +13,6 @@ import com.deepdrilling.nodes.OreNodes;
 import com.simibubi.create.content.kinetics.base.BlockBreakingKineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.LangNumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,7 +35,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /** lots of this is taken from {@link BlockBreakingKineticBlockEntity} */
@@ -93,9 +91,8 @@ public class DrillCoreBE extends KineticBlockEntity {
         if (getSpeed() == 0)
             return -1;
         // 10 seconds at 256 rpm, 20s at 64, 40s at 16
-        AtomicReference<Double> baseSpeed = new AtomicReference<>((20 * 10) / Math.sqrt(Math.abs(getSpeed() / 256f)));
-        ifDrillHeadDo(drillHead -> baseSpeed.set(baseSpeed.get() * drillHead.getSpeedModifier()));
-        return applyModifiers(baseSpeed.get(), ModifierTypes.SPEED);
+        double baseSpeed = (20 * 10) / Math.sqrt(Math.abs(getSpeed() / 256f));
+        return Math.max(0, applyModifiers(baseSpeed, ModifierTypes.SPEED));
     }
 
     public double calculateDamage() {
@@ -107,10 +104,10 @@ public class DrillCoreBE extends KineticBlockEntity {
     }
 
     public int ticksPerProgress() {
-        double speed = calculateSpeed();
-        if (speed < 0)
+        double destroySpeed = calculateSpeed();
+        if (destroySpeed < 0)
             return -1;
-        return (int) Mth.clamp(0.05 * speed, 1, 160);
+        return (int) Mth.clamp(0.05 * destroySpeed, 1, 160);
     }
 
     public DrillHeadBE drillHead = null;
@@ -118,27 +115,27 @@ public class DrillCoreBE extends KineticBlockEntity {
     public DrillHeadBE getDrillHead() {
         if (drillHead == null && level.getBlockEntity(getDrillHeadPosition()) instanceof DrillHeadBE levelDrillHead) {
             drillHead = levelDrillHead;
+            findModules();
         }
         return drillHead;
     }
 
     public void removeDrillHead() {
         drillHead = null;
+        findModules();
     }
 
     public boolean canDrill(BlockState state) {
         return !state.liquid() &&
                 !state.isAir() &&
                 getDrillHead() != null &&
-                getDrillHead().isFunctional() &&
-                OreNodes.get(state.getBlock()).hasTables();
+                OreNodes.get(state.getBlock()).hasTables() &&
+                applyModifiers(true, ModifierTypes.CAN_FUNCTION);
     }
 
     public List<ItemStack> getDrops(ServerLevel level) {
         OreNode node = OreNodes.get(level.getBlockState(breakingPos).getBlock());
-        DrillHeadStats.WeightMultipliers weights = drillHead.getWeightMultipliers().mul(node.weights);
-        weights = weights.mul(getWeightMultipliers());
-        OreNode.LOOT_TYPE type = weights.pick(level.random);
+        OreNode.LOOT_TYPE type = getWeightMultipliers().pick(level.random);
 
         LootTable lootTable = node.getTable(level, type);
         // todo: proper lootcontextparam
@@ -146,7 +143,7 @@ public class DrillCoreBE extends KineticBlockEntity {
                 .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(getBreakingPosition()))
                 .create(LootContextParamSets.ARCHAEOLOGY);
         List<ItemStack> drops = new ArrayList<>();
-        double dropCount = drillHead.getFortuneAmount() + 1;
+        double dropCount = applyModifiers(1D, ModifierTypes.FORTUNE);
         while (dropCount-- > level.random.nextFloat()) {
             drops.addAll(lootTable.getRandomItems(lootParams));
         }
@@ -195,6 +192,12 @@ public class DrillCoreBE extends KineticBlockEntity {
                 }
             }
         }
+        if (getDrillHead() != null) {
+            for (Modifier modifier : getDrillHead().getModifiers()) {
+                modifiers.computeIfAbsent(modifier.type, k -> new ArrayList<>())
+                        .add(new Truple<>(-1, getDrillHead(), modifier));
+            }
+        }
 
         for (List<Truple<Integer, BlockEntity, Modifier>> modifierInstances : modifiers.values()) {
             modifierInstances.sort(Modifier.modifierComparator);
@@ -204,7 +207,8 @@ public class DrillCoreBE extends KineticBlockEntity {
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         boolean val = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-        if (getSpeed() != 0) {
+        // this value is no longer getting synced to the client properly :/
+        /*if (getSpeed() != 0) {
             int totalTicks = ticksPerProgress() * 10;
             Lang.text("Drilling every:").style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
@@ -216,7 +220,7 @@ public class DrillCoreBE extends KineticBlockEntity {
                         .style(ChatFormatting.DARK_GRAY))
                     .forGoggles(tooltip);
             val = true;
-        }
+        }*/
         if (!modules.isEmpty() && isPlayerSneaking) {
             Lang.text("Attached Modules:")
                     .style(ChatFormatting.GRAY)
