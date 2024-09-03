@@ -44,7 +44,6 @@ public class DrillCoreBE extends KineticBlockEntity {
     private int destroyProgress;
     private BlockPos breakingPos;
 
-    // (distance from drill, interface instance)
     private List<Module> modules = new ArrayList<>();
     // { modifierType: [(distance from core, associated BE, modifier)] }
     private HashMap<Modifier.Type, List<Truple<Integer, BlockEntity, Modifier>>> modifiers = new HashMap<>();
@@ -62,11 +61,11 @@ public class DrillCoreBE extends KineticBlockEntity {
     }
 
     public BlockPos getDrillHeadPosition() {
-        return getBlockPos().relative(getBlockState().getValue(com.deepdrilling.blocks.DrillCore.FACING));
+        return getBlockPos().relative(getBlockState().getValue(DrillCore.FACING));
     }
 
     public BlockPos getBreakingPosition() {
-        return getBlockPos().relative(getBlockState().getValue(com.deepdrilling.blocks.DrillCore.FACING), 2);
+        return getBlockPos().relative(getBlockState().getValue(DrillCore.FACING), 2);
     }
 
     public void ifDrillHeadDo(Consumer<DrillHeadBE> lambda) {
@@ -180,7 +179,7 @@ public class DrillCoreBE extends KineticBlockEntity {
             BlockEntity candidate = level.getBlockEntity(pos);
 
             if (candidate instanceof ModuleBE module &&
-                    module.getAxis() == getBlockState().getValue(com.deepdrilling.blocks.DrillCore.FACING).getAxis()) {
+                    module.getModuleAxis() == getBlockState().getValue(DrillCore.FACING).getAxis()) {
                 if (Collections.disjoint(uniqueNames, module.getMutuallyExclusiveNames())) {
                     uniqueNames.addAll(module.getMutuallyExclusiveNames());
 
@@ -190,6 +189,8 @@ public class DrillCoreBE extends KineticBlockEntity {
                                 .add(new Truple<>(zingusValue, module, modifier));
                     }
                 }
+            } else {
+                break;
             }
         }
         if (getDrillHead() != null) {

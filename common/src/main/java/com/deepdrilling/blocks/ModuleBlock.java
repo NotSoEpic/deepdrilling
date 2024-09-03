@@ -1,7 +1,7 @@
 package com.deepdrilling.blocks;
 
 import com.deepdrilling.blockentities.module.ModuleBE;
-import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
+import com.simibubi.create.content.kinetics.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class ModuleBlock<T extends ModuleBE> extends DirectionalKineticBlock implements IBE<T> {
+public abstract class ModuleBlock<T extends ModuleBE> extends RotatedPillarKineticBlock implements IBE<T> {
     public ModuleBlock(Properties properties) {
         super(properties);
     }
@@ -27,6 +27,6 @@ public abstract class ModuleBlock<T extends ModuleBE> extends DirectionalKinetic
 
     @Override
     public Direction.Axis getRotationAxis(BlockState state) {
-        return state.getValue(FACING).getAxis();
+        return state.getValue(AXIS);
     }
 }

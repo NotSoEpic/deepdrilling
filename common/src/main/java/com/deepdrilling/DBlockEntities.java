@@ -1,5 +1,6 @@
 package com.deepdrilling;
 
+import com.deepdrilling.blockentities.BlankModuleBE;
 import com.deepdrilling.blockentities.CollectorModuleBE;
 import com.deepdrilling.blockentities.sludgepump.SludgePumpModuleBE;
 import com.deepdrilling.blockentities.drillcore.DrillCoreBE;
@@ -23,6 +24,13 @@ public class DBlockEntities {
             .instance(() -> DrillCoreInstance::new, false)
             .validBlocks(DBlocks.DRILL)
             .renderer(() -> DrillCoreRenderer::new)
+            .register();
+
+    public static final BlockEntityEntry<BlankModuleBE> BLANK_MODULE = DrillMod.REGISTRATE
+            .blockEntity("blank_module", BlankModuleBE::new)
+            .instance(() -> ShaftInstance::new)
+            .validBlocks(DBlocks.BLANK_MODULE)
+            .renderer(() -> ShaftRenderer::new)
             .register();
 
     public static final BlockEntityEntry<CollectorModuleBE> COLLECTOR = DrillMod.REGISTRATE

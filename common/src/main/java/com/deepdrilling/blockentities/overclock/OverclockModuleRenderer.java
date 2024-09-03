@@ -14,6 +14,6 @@ public class OverclockModuleRenderer extends KineticBlockEntityRenderer<Overcloc
     // this is probably very wrong but it fixes ponder rendering
     @Override
     protected BlockState getRenderedBlockState(OverclockModuleBE be) {
-        return AllBlocks.COGWHEEL.getDefaultState().setValue(RotatedPillarKineticBlock.AXIS, be.getAxis());
+        return AllBlocks.COGWHEEL.getDefaultState().setValue(RotatedPillarKineticBlock.AXIS, be.getModuleAxis());
     }
 }

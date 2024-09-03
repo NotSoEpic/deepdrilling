@@ -8,7 +8,11 @@ import net.minecraft.world.level.block.Block;
 
 public class BlockstateHelper {
     @ExpectPlatform
-    public static <T extends Block> void existingFile(DataGenContext<Block, T> c, RegistrateBlockstateProvider p, String location) {
+    public static <T extends Block> void existingFilePillar(DataGenContext<Block, T> c, RegistrateBlockstateProvider p, String location) {
+    }
+
+    @ExpectPlatform
+    public static <T extends Block> void existingFileFacing(DataGenContext<Block, T> c, RegistrateBlockstateProvider p, String location) {
     }
 
     @ExpectPlatform

@@ -7,7 +7,6 @@ import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
 import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
 import com.simibubi.create.content.kinetics.simpleRelays.CogWheelBlock;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class OverclockModuleInstance extends SingleRotatingInstance<OverclockModuleBE> {
@@ -17,8 +16,7 @@ public class OverclockModuleInstance extends SingleRotatingInstance<OverclockMod
 
     @Override
     protected Instancer<RotatingData> getModel() {
-        BlockState referenceState = blockEntity.getBlockState();
-        Direction facing = referenceState.getValue(BlockStateProperties.FACING);
-        return getRotatingMaterial().getModel(AllBlocks.COGWHEEL.getDefaultState().setValue(CogWheelBlock.AXIS, facing.getAxis()));
+        Direction.Axis axis = blockEntity.getBlockState().getValue(BlockStateProperties.AXIS);
+        return getRotatingMaterial().getModel(AllBlocks.COGWHEEL.getDefaultState().setValue(CogWheelBlock.AXIS, axis));
     }
 }

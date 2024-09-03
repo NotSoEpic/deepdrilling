@@ -1,8 +1,6 @@
 package com.deepdrilling.blockentities.module;
 
 import com.deepdrilling.blockentities.drillcore.DrillCoreBE;
-import com.deepdrilling.blockentities.module.Module;
-import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -26,9 +25,9 @@ public abstract class ModuleBE extends KineticBlockEntity implements Module {
         if (getAttachedDrill() != null)
             return getAttachedDrill();
         for (int i = 1; i < DrillCoreBE.searchDist + 1; i++) {
-            if (level.getBlockEntity(pos.relative(getAxis(), i)) instanceof DrillCoreBE drillBlockEntity)
+            if (level.getBlockEntity(pos.relative(getModuleAxis(), i)) instanceof DrillCoreBE drillBlockEntity)
                 return drillBlockEntity;
-            if (level.getBlockEntity(pos.relative(getAxis(), -i)) instanceof DrillCoreBE drillBlockEntity)
+            if (level.getBlockEntity(pos.relative(getModuleAxis(), -i)) instanceof DrillCoreBE drillBlockEntity)
                 return drillBlockEntity;
         }
         return null;
@@ -45,8 +44,11 @@ public abstract class ModuleBE extends KineticBlockEntity implements Module {
         return attachedDrill;
     }
 
-    public Direction.Axis getAxis() {
-        return getBlockState().getValue(DirectionalKineticBlock.FACING).getAxis();
+    public Direction.Axis getModuleAxis() {
+        if (getBlockState().hasProperty(BlockStateProperties.AXIS)) {
+            return getBlockState().getValue(BlockStateProperties.AXIS);
+        }
+        return getBlockState().getValue(BlockStateProperties.FACING).getAxis();
     }
 
     @Override

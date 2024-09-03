@@ -25,12 +25,12 @@ public class Modifier<V, B> {
     }
 
     public static Comparator<Truple<Integer, BlockEntity, Modifier>> modifierComparator = (lhs, rhs) -> {
-        if (lhs.getC().getPriority() == rhs.getC().getPriority()) {
+        if (rhs.getC().getPriority() == lhs.getC().getPriority()) {
             // in tiebreaker, sort distance by ascending
-            return lhs.getA() - rhs.getA();
+            return rhs.getA() - lhs.getA();
         }
         // sort priority by descending
-        return lhs.getC().getPriority() - rhs.getC().getPriority();
+        return rhs.getC().getPriority() - lhs.getC().getPriority();
     };
 
     @FunctionalInterface
