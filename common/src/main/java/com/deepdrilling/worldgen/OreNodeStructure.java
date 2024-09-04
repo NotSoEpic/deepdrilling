@@ -1,14 +1,13 @@
 package com.deepdrilling.worldgen;
 
-import com.deepdrilling.DrillMod;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,11 +42,9 @@ public class OreNodeStructure extends Structure {
         ));
     }
 
-    private static final StructureType<OreNodeStructure> TYPE =
-            Registry.register(BuiltInRegistries.STRUCTURE_TYPE, DrillMod.id("ore_node"), () -> CODEC);
     @Override
     public StructureType<?> type() {
-        return TYPE;
+        return getStructureType();
     }
 
     record Data(ResourceLocation node, List<ResourceLocation> ores, List<ResourceLocation> layers) {
@@ -60,7 +57,13 @@ public class OreNodeStructure extends Structure {
         );
     }
 
-    public static void init() {
-        OreNodePiece.init();
+    @ExpectPlatform
+    public static StructureType<OreNodeStructure> getStructureType() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static StructurePieceType getPieceType() {
+        throw new AssertionError();
     }
 }

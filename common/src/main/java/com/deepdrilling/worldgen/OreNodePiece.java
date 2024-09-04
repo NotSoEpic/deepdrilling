@@ -3,7 +3,6 @@ package com.deepdrilling.worldgen;
 import com.deepdrilling.DrillMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -20,7 +19,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
-import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -30,12 +28,12 @@ import java.util.function.Predicate;
 public class OreNodePiece extends StructurePiece {
     private final OreNodeStructure.Data data;
     public OreNodePiece(int x, int y, int z, OreNodeStructure.Data data) {
-        super(TYPE, y, BoundingBox.orientBox(x, y, z, 0, 0, 0, 32, 32, 32, Direction.SOUTH));
+        super(OreNodeStructure.getPieceType(), y, BoundingBox.orientBox(x, y, z, 0, 0, 0, 32, 32, 32, Direction.SOUTH));
         this.data = data;
     }
 
     public OreNodePiece(StructurePieceSerializationContext structurePieceSerializationContext, CompoundTag compoundTag) {
-        super(TYPE, compoundTag);
+        super(OreNodeStructure.getPieceType(), compoundTag);
         this.data = OreNodeStructure.Data.CODEC.decode(NbtOps.INSTANCE, compoundTag.get("node_data"))
                 .resultOrPartial(str -> DrillMod.LOGGER.error("Error loading ore node save data: {}", str)).orElseThrow().getFirst();
     }
@@ -151,8 +149,4 @@ public class OreNodePiece extends StructurePiece {
         }
 
     }
-
-    public static final StructurePieceType TYPE = Registry.register(BuiltInRegistries.STRUCTURE_PIECE, DrillMod.id("ore_node"), OreNodePiece::new);
-
-    public static void init() {}
 }

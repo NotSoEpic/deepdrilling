@@ -6,11 +6,11 @@ import com.deepdrilling.ModuleStatTooltips;
 import com.deepdrilling.fluid.fabric.FluidsImpl;
 import com.deepdrilling.nodes.LootParser;
 import com.deepdrilling.nodes.OreNodes;
+import com.deepdrilling.worldgen.fabric.OreNodeStructureImpl;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
-import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -31,11 +31,7 @@ public class DrillModFabric implements ModInitializer {
 //        DrillMod.BASE_CREATIVE_TAB = new DrillCreativeTab(ItemGroupUtil.expandArrayAndGetId(), "deepdrilling.creative_tab");
         DrillMod.init();
         FluidsImpl.init();
-        DrillMod.LOGGER.info(EnvExecutor.unsafeRunForDist(
-                () -> () -> "{} is accessing Porting Lib on a Fabric client!",
-                () -> () -> "{} is accessing Porting Lib on a Fabric server!"
-                ), DrillMod.NAME);
-        // on fabric, Registrates must be explicitly finalized and registered.
+        OreNodeStructureImpl.init();
         DrillMod.REGISTRATE.register();
         registerReloadListeners();
     }

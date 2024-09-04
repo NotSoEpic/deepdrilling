@@ -2,6 +2,7 @@ package com.deepdrilling.forge;
 
 import com.deepdrilling.DrillMod;
 import com.deepdrilling.fluid.forge.FluidsImpl;
+import com.deepdrilling.worldgen.forge.OreNodeStructureImpl;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -29,8 +30,7 @@ public class DrillModForge {
         DrillMod.REGISTRATE.registerEventListeners(BUS);
         DrillMod.init();
         FluidsImpl.init();
-        OreNodeManager.init(BUS);
-
+        OreNodeStructureImpl.init();
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             DrillModClientForge.setupEvents(BUS);
         });
