@@ -2,7 +2,6 @@ package com.deepdrilling.forge;
 
 import com.deepdrilling.DrillMod;
 import com.deepdrilling.fluid.forge.FluidsImpl;
-import com.deepdrilling.forge.worldgen.OreNodeManager;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipHelper;

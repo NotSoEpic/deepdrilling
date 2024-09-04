@@ -3,7 +3,6 @@ package com.deepdrilling.fabric;
 import com.deepdrilling.DrillHeadTooltips;
 import com.deepdrilling.DrillMod;
 import com.deepdrilling.ModuleStatTooltips;
-import com.deepdrilling.fabric.worldgen.OreNodeManager;
 import com.deepdrilling.fluid.fabric.FluidsImpl;
 import com.deepdrilling.nodes.LootParser;
 import com.deepdrilling.nodes.OreNodes;
@@ -39,7 +38,6 @@ public class DrillModFabric implements ModInitializer {
         // on fabric, Registrates must be explicitly finalized and registered.
         DrillMod.REGISTRATE.register();
         registerReloadListeners();
-        OreNodeManager.init();
     }
 
     private void registerReloadListeners() {

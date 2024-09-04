@@ -1,7 +1,7 @@
 package com.deepdrilling;
 
 import com.deepdrilling.blockentities.drillhead.DDrillHeads;
-import com.deepdrilling.worldgen.OreNodes;
+import com.deepdrilling.worldgen.OreNodeStructure;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import net.minecraft.resources.ResourceLocation;
@@ -28,7 +28,7 @@ public class DrillMod {
 
         // there are probably several better ways to do this whole process but this is the one I stumbled upon that actually worked
         DDrillHeads.registerBlockEntity();
-        OreNodes.init();
+        OreNodeStructure.init();
     }
 
 //    public static final CreativeModeTab CREATIVE_TAB = new CreativeModeTab(CreativeModeTab.TABS.length, "deepdrilling") {

@@ -2,7 +2,6 @@ package com.deepdrilling;
 
 import com.deepdrilling.blockentities.BlankModuleBE;
 import com.deepdrilling.blockentities.CollectorModuleBE;
-import com.deepdrilling.blockentities.sludgepump.SludgePumpModuleBE;
 import com.deepdrilling.blockentities.drillcore.DrillCoreBE;
 import com.deepdrilling.blockentities.drillcore.DrillCoreInstance;
 import com.deepdrilling.blockentities.drillcore.DrillCoreRenderer;
@@ -10,6 +9,7 @@ import com.deepdrilling.blockentities.drillhead.DDrillHeads;
 import com.deepdrilling.blockentities.overclock.OverclockModuleBE;
 import com.deepdrilling.blockentities.overclock.OverclockModuleInstance;
 import com.deepdrilling.blockentities.overclock.OverclockModuleRenderer;
+import com.deepdrilling.blockentities.sludgepump.SludgePumpModuleBE;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
 import com.simibubi.create.content.kinetics.base.ShaftRenderer;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;

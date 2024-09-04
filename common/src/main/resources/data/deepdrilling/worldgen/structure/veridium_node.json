@@ -1,6 +1,9 @@
 {
   "type": "deepdrilling:ore_node",
-  "config": {
+  "biomes": "#deepdrilling:veridium_node",
+  "step": "underground_decoration",
+  "spawn_overrides": {},
+  "ore_node": {
     "nodeID": "deepdrilling:veridium_node",
     "ores": [
       "minecraft:copper_ore"

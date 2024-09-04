@@ -1,43 +1,67 @@
 package com.deepdrilling.worldgen;
 
-import com.mojang.serialization.Codec;
+import com.deepdrilling.DrillMod;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
-public class OreNodeFeature extends Feature<OreNodeConfiguration> {
-    public OreNodeFeature(Codec<OreNodeConfiguration> codec) {
-        super(codec);
+public class OreNodePiece extends StructurePiece {
+    private final OreNodeStructure.Data data;
+    public OreNodePiece(int x, int y, int z, OreNodeStructure.Data data) {
+        super(TYPE, y, BoundingBox.orientBox(x, y, z, 0, 0, 0, 32, 32, 32, Direction.SOUTH));
+        this.data = data;
+    }
+
+    public OreNodePiece(StructurePieceSerializationContext structurePieceSerializationContext, CompoundTag compoundTag) {
+        super(TYPE, compoundTag);
+        this.data = OreNodeStructure.Data.CODEC.decode(NbtOps.INSTANCE, compoundTag.get("node_data"))
+                .resultOrPartial(str -> DrillMod.LOGGER.error("Error loading ore node save data: {}", str)).orElseThrow().getFirst();
     }
 
     @Override
-    public boolean place(FeaturePlaceContext<OreNodeConfiguration> context) {
-        WorldGenLevel level = context.level();
-        BlockPos origin = context.origin();
-        RandomSource random = context.random();
-        OreNodeConfiguration config = context.config();
+    protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag tag) {
+        OreNodeStructure.Data.CODEC.encodeStart(NbtOps.INSTANCE, data)
+                .resultOrPartial(str -> DrillMod.LOGGER.error("Error adding ore node save data: {}", str)).ifPresent(
+                        codecTag -> tag.put("node_data", codecTag)
+                );
+    }
 
-        BlockState blockState = parseResourceLocation(config.node());
+    @Override
+    public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator generator, RandomSource random, BoundingBox box, ChunkPos chunkPos, BlockPos origin) {
+        if (!chunkPos.equals(new ChunkPos(origin)))
+            return;
 
-        List<ResourceLocation> oreIDs = config.ores();
+        BlockState blockState = parseResourceLocation(data.node());
+
+        List<ResourceLocation> oreIDs = data.ores();
         if (oreIDs.isEmpty()) throw new IllegalArgumentException("No identifiers for ores list");
-        List<BlockState> oreStates = oreIDs.stream().map(OreNodeFeature::parseResourceLocation).toList();
+        List<BlockState> oreStates = oreIDs.stream().map(OreNodePiece::parseResourceLocation).toList();
 
-        List<ResourceLocation> layerIDs = config.layers();
+        List<ResourceLocation> layerIDs = data.layers();
         if (layerIDs.isEmpty()) throw new IllegalArgumentException("No identifiers for layers list");
-        List<BlockState> layerStates = layerIDs.stream().map(OreNodeFeature::parseResourceLocation).toList();
+        List<BlockState> layerStates = layerIDs.stream().map(OreNodePiece::parseResourceLocation).toList();
 
         List<BlockPos> blobCenters = new ArrayList<>();
         for (int i = random.nextInt(3, 4); i > 0; i--) {
@@ -111,14 +135,24 @@ public class OreNodeFeature extends Feature<OreNodeConfiguration> {
                 }
             }
         }
-        return true;
     }
 
-    public static BlockState parseResourceLocation(ResourceLocation resource) {
+    private static BlockState parseResourceLocation(ResourceLocation resource) {
         return BuiltInRegistries.BLOCK.get(resource).defaultBlockState();
     }
 
-    public static <T> T choose(List<T> list, RandomSource random) {
+    private static <T> T choose(List<T> list, RandomSource random) {
         return list.get(random.nextInt(list.size()));
     }
+
+    private void safeSetBlock(WorldGenLevel level, BlockPos pos, BlockState state, Predicate<BlockState> oldState) {
+        if (oldState.test(level.getBlockState(pos))) {
+            level.setBlock(pos, state, 2);
+        }
+
+    }
+
+    public static final StructurePieceType TYPE = Registry.register(BuiltInRegistries.STRUCTURE_PIECE, DrillMod.id("ore_node"), OreNodePiece::new);
+
+    public static void init() {}
 }

@@ -2,11 +2,11 @@ package com.deepdrilling.blockentities.drillcore;
 
 import com.deepdrilling.DrillHeadStats;
 import com.deepdrilling.Truple;
-import com.deepdrilling.blockentities.module.ModuleBE;
 import com.deepdrilling.blockentities.drillhead.DrillHeadBE;
 import com.deepdrilling.blockentities.module.Modifier;
 import com.deepdrilling.blockentities.module.ModifierTypes;
 import com.deepdrilling.blockentities.module.Module;
+import com.deepdrilling.blockentities.module.ModuleBE;
 import com.deepdrilling.blocks.DrillCore;
 import com.deepdrilling.nodes.OreNode;
 import com.deepdrilling.nodes.OreNodes;
