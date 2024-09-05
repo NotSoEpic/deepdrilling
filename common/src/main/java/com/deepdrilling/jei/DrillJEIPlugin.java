@@ -2,8 +2,7 @@ package com.deepdrilling.jei;
 
 import com.deepdrilling.DrillMod;
 import com.deepdrilling.blockentities.drillhead.DDrillHeads;
-import com.deepdrilling.nodes.OreNode;
-import com.deepdrilling.nodes.OreNodes;
+import com.deepdrilling.nodes.LootParser;
 import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.ItemIcon;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
@@ -17,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @JeiPlugin
 public class DrillJEIPlugin implements IModPlugin {
@@ -34,12 +34,12 @@ public class DrillJEIPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerRecipes(IRecipeRegistration registration) {
-        List<FakeOreNodeRecipe> fakeRecipes = new ArrayList<>();
-        OreNodes.getNodeMap().forEach((block, oreNode) -> {
-            fakeRecipes.add(new FakeOreNodeRecipe(block, OreNode.EMPTY));
-        });
-        registration.addRecipes(FakeOreNodeRecipe.RECIPE_TYPE, fakeRecipes);
+    public void registerRecipes(IRecipeRegistration registration) {;
+        registration.addRecipes(FakeOreNodeRecipe.RECIPE_TYPE,
+                LootParser.knownTables.entrySet().stream()
+                        .map(entry -> new FakeOreNodeRecipe(entry.getKey(), entry.getValue()))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override

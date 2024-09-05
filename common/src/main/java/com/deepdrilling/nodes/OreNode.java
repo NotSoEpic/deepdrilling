@@ -47,6 +47,11 @@ public class OreNode {
         return getTable(level, type) != LootTable.EMPTY;
     }
 
+    @Override
+    public String toString() {
+        return name.toString();
+    }
+
     public boolean hasTables() {
         return (!Objects.equals(earthTable, "") || !Objects.equals(commonTable, "") || !Objects.equals(rareTable, ""))
                 && !weights.isZero();

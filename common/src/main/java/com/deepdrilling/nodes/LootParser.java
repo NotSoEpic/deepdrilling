@@ -4,6 +4,7 @@ import com.deepdrilling.DrillMod;
 import com.google.common.collect.ImmutableMap;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import io.netty.buffer.Unpooled;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +18,6 @@ import net.minecraft.world.level.storage.loot.entries.CompositeEntryBase;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +26,7 @@ import java.util.Set;
  * Inspired by <a href="https://github.com/fzzyhmstrs/EMI_loot/blob/master/src/main/java/fzzyhmstrs/emi_loot/parser/LootTableParser.java#L42">EMI Loot's</a> system
  */
 public class LootParser {
-    public static Map<OreNode, LootEntry> knownTables = ImmutableMap.of();
+    public static Map<Block, LootEntry> knownTables = ImmutableMap.of();
     public static boolean hasLoaded = false;
 
     public static void invalidate() {
@@ -36,11 +36,9 @@ public class LootParser {
 
     // SERVER SIDE LOADING
     public static void parseOreNodes(LootDataManager manager, Map<Block, OreNode> nodes) {
-        Set<OreNode> added = new HashSet<>();
-        ImmutableMap.Builder<OreNode, LootEntry> builder = ImmutableMap.builder();
-        for (OreNode node : nodes.values()) {
-            if (added.add(node))
-                builder.put(node, parseOreNode(manager, node));
+        ImmutableMap.Builder<Block, LootEntry> builder = ImmutableMap.builder();
+        for (Map.Entry<Block, OreNode> entry : nodes.entrySet()) {
+            builder.put(entry.getKey(), parseOreNode(manager, entry.getValue()));
         }
         knownTables = builder.build();
         hasLoaded = true;
@@ -101,13 +99,13 @@ public class LootParser {
     // SERVER -> CLIENT SYNCING
     public static void sendToPlayer(ServerPlayer player) {
         if (!hasLoaded) {
-            DrillMod.LOGGER.warn("Tried to send unloaded node loot to player! Generating now");
+            DrillMod.LOGGER.info("Tried to send unloaded node loot to player! Generating now");
             parseOreNodes(player.server.getLootData(), OreNodes.getNodeMap());
         }
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeInt(knownTables.size());
-        for (Map.Entry<OreNode, LootEntry> entry : knownTables.entrySet()) {
-            buf.writeUtf(entry.getKey().name.toString());
+        for (Map.Entry<Block, LootEntry> entry : knownTables.entrySet()) {
+            buf.writeInt(BuiltInRegistries.BLOCK.getId(entry.getKey()));
             writeItems(buf, entry.getValue().earth);
             writeItems(buf, entry.getValue().common);
             writeItems(buf, entry.getValue().rare);
@@ -124,21 +122,21 @@ public class LootParser {
     public static void receiveFromServer(FriendlyByteBuf buf) {
         invalidate();
         int nodeCount = buf.readInt();
-        ImmutableMap.Builder<OreNode, LootEntry> builder = ImmutableMap.builder();
+        ImmutableMap.Builder<Block, LootEntry> builder = ImmutableMap.builder();
         for (int i = 0; i < nodeCount; i++) {
-            ResourceLocation name = new ResourceLocation(buf.readUtf());
-            for (OreNode node : OreNodes.getNodeMap().values()) {
-                if (node.name.equals(name)) {
-                    builder.put(node, new LootEntry(
-                            readItems(buf),
-                            readItems(buf),
-                            readItems(buf)
-                    ));
-                    break;
-                }
-            }
+            readNode(buf, builder);
         }
         knownTables = builder.build();
+    }
+
+    private static void readNode(FriendlyByteBuf buf, ImmutableMap.Builder<Block, LootEntry> builder) {
+        Block block = BuiltInRegistries.BLOCK.byId(buf.readInt());
+        LootEntry entry = new LootEntry(
+                readItems(buf),
+                readItems(buf),
+                readItems(buf)
+        );
+        builder.put(block, entry);
     }
 
     private static Set<Item> readItems(FriendlyByteBuf buf) {

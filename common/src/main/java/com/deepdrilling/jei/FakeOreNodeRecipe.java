@@ -1,7 +1,7 @@
 package com.deepdrilling.jei;
 
 import com.deepdrilling.DrillMod;
-import com.deepdrilling.nodes.OreNode;
+import com.deepdrilling.nodes.LootParser;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -15,11 +15,10 @@ import net.minecraft.world.level.block.Block;
 // this is bad and hacky wawa
 public class FakeOreNodeRecipe implements Recipe<CraftingContainer> {
     public final ItemStack nodeBlock;
-    public final OreNode nodeTables;
-    public FakeOreNodeRecipe(Block nodeBlock, OreNode nodeTables) {
+    public final LootParser.LootEntry lootEntry;
+    public FakeOreNodeRecipe(Block nodeBlock, LootParser.LootEntry lootEntry) {
         this.nodeBlock = nodeBlock.asItem().getDefaultInstance();
-        // it was at that moment i realised loot tables are not even loaded on the client at all...
-        this.nodeTables = nodeTables;
+        this.lootEntry = lootEntry;
     }
 
     public static final mezz.jei.api.recipe.RecipeType<FakeOreNodeRecipe> RECIPE_TYPE =

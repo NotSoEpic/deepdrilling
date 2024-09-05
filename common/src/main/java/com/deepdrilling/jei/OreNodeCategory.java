@@ -1,7 +1,5 @@
 package com.deepdrilling.jei;
 
-import com.deepdrilling.nodes.LootParser;
-import com.deepdrilling.nodes.OreNodes;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -35,31 +33,26 @@ public class OreNodeCategory extends CreateRecipeCategory<FakeOreNodeRecipe> {
                 .setBackground(getRenderedSlot(), -1, -1)
                 .addItemStack(recipe.nodeBlock);
 
-        if (recipe.nodeBlock.getItem() instanceof BlockItem blockItem) {
-            LootParser.LootEntry lootEntry = LootParser.knownTables.get(OreNodes.getNodeMap().get(blockItem.getBlock()));
-            if (lootEntry != null) {
-                int x = 70;
-                for (Item item : lootEntry.earth()) {
-                    builder.addSlot(RecipeIngredientRole.OUTPUT, x, 14)
-                            .setBackground(getRenderedSlot(0), -1, -1)
-                            .addItemStack(new ItemStack(item));
-                    x += 19;
-                }
-                x = 70;
-                for (Item item : lootEntry.common()) {
-                    builder.addSlot(RecipeIngredientRole.OUTPUT, x, 44)
-                            .setBackground(getRenderedSlot(0), -1, -1)
-                            .addItemStack(new ItemStack(item));
-                    x += 19;
-                }
-                x = 70;
-                for (Item item : lootEntry.rare()) {
-                    builder.addSlot(RecipeIngredientRole.OUTPUT, x, 74)
-                            .setBackground(getRenderedSlot(0), -1, -1)
-                            .addItemStack(new ItemStack(item));
-                    x += 19;
-                }
-            }
+        int x = 70;
+        for (Item item : recipe.lootEntry.earth()) {
+            builder.addSlot(RecipeIngredientRole.OUTPUT, x, 14)
+                    .setBackground(getRenderedSlot(0), -1, -1)
+                    .addItemStack(new ItemStack(item));
+            x += 19;
+        }
+        x = 70;
+        for (Item item : recipe.lootEntry.common()) {
+            builder.addSlot(RecipeIngredientRole.OUTPUT, x, 44)
+                    .setBackground(getRenderedSlot(0), -1, -1)
+                    .addItemStack(new ItemStack(item));
+            x += 19;
+        }
+        x = 70;
+        for (Item item : recipe.lootEntry.rare()) {
+            builder.addSlot(RecipeIngredientRole.OUTPUT, x, 74)
+                    .setBackground(getRenderedSlot(0), -1, -1)
+                    .addItemStack(new ItemStack(item));
+            x += 19;
         }
     }
 
