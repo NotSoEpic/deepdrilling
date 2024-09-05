@@ -22,7 +22,6 @@ public class DrillModForge {
         DrillMod.REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, TooltipHelper.Palette.STANDARD_CREATE)
                 .andThen(TooltipModifier.mapNull(KineticStats.create(item)))
                 .andThen(TooltipModifier.mapNull(DrillHeadTooltipsForge.create(item)))
-                .andThen(TooltipModifier.mapNull(ModuleStatTooltipsForge.create(item)))
         );
 
 //        DrillMod.BASE_CREATIVE_TAB = new DrillCreativeTab(CreativeModeTab.TABS.length, "deepdrilling.creative_tab");
