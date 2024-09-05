@@ -1,11 +1,10 @@
 package com.deepdrilling.blocks;
 
 import com.deepdrilling.DBlockEntities;
-import com.deepdrilling.DrillHeadStats;
 import com.deepdrilling.blockentities.sludgepump.SludgePumpModuleBE;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-public class SludgePumpModuleBlock extends ModuleBlock<SludgePumpModuleBE> implements IModuleTooltip {
+public class SludgePumpModuleBlock extends ModuleBlock<SludgePumpModuleBE> {
     public SludgePumpModuleBlock(Properties properties) {
         super(properties);
     }
@@ -18,25 +17,5 @@ public class SludgePumpModuleBlock extends ModuleBlock<SludgePumpModuleBE> imple
     @Override
     public BlockEntityType<? extends SludgePumpModuleBE> getBlockEntityType() {
         return DBlockEntities.SLUDGE_PUMP.get();
-    }
-
-    @Override
-    public boolean unique() {
-        return true;
-    }
-
-    @Override
-    public int damageModifier() {
-        return -1;
-    }
-
-    @Override
-    public int speedModifier() {
-        return -1;
-    }
-
-    @Override
-    public DrillHeadStats.WeightMultipliers getWeightMultipliers() {
-        return new DrillHeadStats.WeightMultipliers(2, 0, 0);
     }
 }

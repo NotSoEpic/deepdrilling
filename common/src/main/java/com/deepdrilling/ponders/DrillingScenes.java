@@ -2,16 +2,14 @@ package com.deepdrilling.ponders;
 
 import com.deepdrilling.blockentities.drillhead.DDrillHeads;
 import com.deepdrilling.blocks.DrillHeadBlock;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderWorld;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
+import com.simibubi.create.foundation.ponder.*;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class DrillingScenes {
@@ -110,9 +108,8 @@ public class DrillingScenes {
     public static void drillModules(SceneBuilder scene, SceneBuildingUtil util) {
         scene.title("drill_modules", "Using Modules");
         scene.configureBasePlate(0, 0, 5);
+        scene.scaleSceneView(0.8f);
         scene.world.showSection(util.select.fromTo(0, 0, 0, 4, 0, 4), Direction.UP);
-
-        scene.world.setKineticSpeed(util.select.everywhere(), 16);
 
         ElementLink<WorldSectionElement> side_shaft_top = scene.world
                 .showIndependentSection(util.select.fromTo(2, 3, 5, 2, 8, 5), Direction.NORTH);
@@ -130,27 +127,6 @@ public class DrillingScenes {
         scene.world.showSection(util.select.position(2, 1, 2), Direction.SOUTH);
         scene.idle(5);
 
-        BlockPos breakingPos = util.grid.at(2, 0, 2);
-        int totalTicks = 0;
-        for (int i = 0; i < 15; i++) {
-            scene.idle(10);
-            loopingBlockBreakingProgress(scene, breakingPos);
-            if (i == 1) {
-                scene.overlay.showText(80)
-                        .text("To prevent items from being thrown on the ground a Collection Filter can be added")
-                        .pointAt(util.vector.topOf(breakingPos))
-                        .attachKeyFrame()
-                        .placeNearTarget();
-            }
-            if (totalTicks == 9) {
-                totalTicks = 0;
-                scene.world.createItemEntity(util.vector.topOf(breakingPos), util.vector.of(-0.15f, 0.15f, 0),
-                        new ItemStack(AllItems.CRUSHED_IRON.get()));
-            } else {
-                totalTicks++;
-            }
-        }
-
         scene.world.setKineticSpeed(util.select.fromTo(2, 1, 2, 2, 2, 2), 0);
         scene.world.moveSection(side_shaft_top, new Vec3(0, 1, 0), 5);
         scene.world.moveSection(top_shaft, new Vec3(0, 1, 0), 5);
@@ -160,53 +136,12 @@ public class DrillingScenes {
         scene.idle(5);
 
         scene.world.setKineticSpeed(util.select.everywhere(), 16);
-        for (int i = 0; i < 15; i++) {
-            scene.idle(10);
-            loopingBlockBreakingProgress(scene, breakingPos);
-            if (i == 5) {
-                scene.overlay.showText(80)
-                        .text("Results are stored in its inventory")
-                        .pointAt(util.vector.blockSurface(util.grid.at(2, 3, 2), Direction.WEST))
-                        .attachKeyFrame()
-                        .placeNearTarget();
-            }
-            if (totalTicks == 9) {
-                totalTicks = 0;
-            } else {
-                totalTicks++;
-            }
-        }
-
-        scene.world.showSection(util.select.position(1, 3, 2), Direction.EAST);
         scene.overlay.showText(80)
-                .text("And can be automatically extracted")
-                .pointAt(util.vector.blockSurface(util.grid.at(1, 3, 2), Direction.EAST))
-                .attachKeyFrame()
-                .placeNearTarget();
-        scene.idle(5);
-
-        Vec3 sideItemSpawn = util.vector.centerOf(1, 3, 2)
-                .add(-0.15f, -0.45f, 0);
-        scene.world.flapFunnel(util.grid.at(1, 3, 2), true);
-        scene.world.createItemEntity(sideItemSpawn, util.vector.of(0, 0, 0),
-                new ItemStack(AllItems.CRUSHED_IRON.get()));
-        scene.idle(10);
-        scene.world.flapFunnel(util.grid.at(1, 3, 2), true);
-        scene.world.createItemEntity(sideItemSpawn, util.vector.of(0, 0, 0),
-                new ItemStack(AllItems.CRUSHED_IRON.get()));
-
-        for (int i = 0; i < 10; i++) {
-            scene.idle(10);
-            loopingBlockBreakingProgress(scene, breakingPos);
-            if (totalTicks == 9) {
-                totalTicks = 0;
-                scene.world.flapFunnel(util.grid.at(1, 3, 2), true);
-                scene.world.createItemEntity(sideItemSpawn, util.vector.of(0, 0, 0),
-                        new ItemStack(AllItems.CRUSHED_IRON.get()));
-            } else {
-                totalTicks++;
-            }
-        }
+                .text("The behaviour and properties of drills can be modified by attaching Modules")
+                .pointAt(new Vec3(2, 3, 2))
+                .placeNearTarget()
+                .attachKeyFrame();
+        scene.idle(80);
 
         scene.world.setKineticSpeed(util.select.fromTo(2, 1, 2, 2, 3, 2), 0);
         scene.world.moveSection(side_shaft_top, new Vec3(0, 1, 0), 5);
@@ -223,26 +158,31 @@ public class DrillingScenes {
 
         scene.world.showSection(util.select.fromTo(2, 4, 2, 2, 7, 2), Direction.SOUTH);
         scene.world.setKineticSpeed(util.select.everywhere(), 16);
-        for (int i = 0; i < 40; i++) {
-            scene.idle(2);
-            loopingBlockBreakingProgress(scene, breakingPos);
-            if (i == 15) {
-                scene.overlay.showText(80)
-                        .text("Up to 5 modules can be attached to one Deep Drill")
-                        .pointAt(util.vector.blockSurface(util.grid.at(2, 4, 2), Direction.WEST))
-                        .attachKeyFrame()
-                        .placeNearTarget();
-            }
-            if (totalTicks == 9) {
-                totalTicks = 0;
-                scene.world.flapFunnel(util.grid.at(1, 3, 2), true);
-                scene.world.createItemEntity(sideItemSpawn, util.vector.of(0, 0, 0),
-                        new ItemStack(AllItems.CRUSHED_IRON.get()));
-            } else {
-                totalTicks++;
-            }
-        }
+        scene.idle(15);
 
-        scene.world.setBlock(util.grid.at(2, 1, 2), Blocks.AIR.defaultBlockState(), true);
+        AABB bb = new AABB(util.grid.at(2, 3, 2));
+        scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb, 1);
+        scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb.expandTowards(0, 4, 0), 80);
+        scene.overlay.showText(80)
+                .text("Up to 5 Modules can be attached at once")
+                .pointAt(new Vec3(2, 5, 2))
+                .placeNearTarget()
+                .attachKeyFrame();
+        scene.idle(80);
+
+        scene.world.replaceBlocks(util.select.position(2, 4, 2), AllBlocks.SHAFT.getDefaultState(), true);
+        scene.world.setKineticSpeed(util.select.everywhere(), 16);
+        scene.idle(15);
+
+        AABB bb2 = new AABB(util.grid.at(2, 7, 2));
+        scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb, 80);
+        scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, bb2, bb2.expandTowards(0, -3, 0), 1);
+        scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, bb2, bb2.expandTowards(0, -2, 0), 80);
+        scene.overlay.showText(80)
+                .text("Any Module after a gap is ignored")
+                .pointAt(new Vec3(2, 5, 2))
+                .placeNearTarget()
+                .attachKeyFrame();
+        scene.idle(80);
     }
 }

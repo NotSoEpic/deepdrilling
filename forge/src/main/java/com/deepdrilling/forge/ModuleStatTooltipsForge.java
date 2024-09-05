@@ -1,7 +1,5 @@
 package com.deepdrilling.forge;
 
-import com.deepdrilling.ModuleStatTooltips;
-import com.deepdrilling.blocks.IModuleTooltip;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;

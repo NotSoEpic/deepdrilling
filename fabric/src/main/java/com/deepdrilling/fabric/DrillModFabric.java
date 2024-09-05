@@ -2,7 +2,6 @@ package com.deepdrilling.fabric;
 
 import com.deepdrilling.DrillHeadTooltips;
 import com.deepdrilling.DrillMod;
-import com.deepdrilling.ModuleStatTooltips;
 import com.deepdrilling.fluid.fabric.FluidsImpl;
 import com.deepdrilling.nodes.LootParser;
 import com.deepdrilling.nodes.OreNodes;
@@ -25,7 +24,6 @@ public class DrillModFabric implements ModInitializer {
         DrillMod.REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, TooltipHelper.Palette.STANDARD_CREATE)
                 .andThen(TooltipModifier.mapNull(KineticStats.create(item)))
                 .andThen(TooltipModifier.mapNull(DrillHeadTooltips.create(item)))
-                .andThen(TooltipModifier.mapNull(ModuleStatTooltips.create(item)))
         );
 
 //        DrillMod.BASE_CREATIVE_TAB = new DrillCreativeTab(ItemGroupUtil.expandArrayAndGetId(), "deepdrilling.creative_tab");

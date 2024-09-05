@@ -19,20 +19,23 @@ public class Ponders {
 
 
     public static void register() {
+        DRILLING.defaultLang("Deep Drilling", "Components related to extracting resources from deep within the earth");
+
         List<BlockEntry<? extends Block>> drills = new ArrayList<>(DDrillHeads.knownDrillHeads);
         drills.add(DBlocks.DRILL);
         HELPER.forComponents(drills)
                 .addStoryBoard("drill/drilling", DrillingScenes::drillBasics);
 
-        HELPER.forComponents(DBlocks.DRILL, DBlocks.COLLECTOR, DBlocks.DRILL_OVERCLOCK, DBlocks.SLUDGE_PUMP)
+        HELPER.forComponents(DBlocks.DRILL, DBlocks.BLANK_MODULE, DBlocks.COLLECTOR, DBlocks.DRILL_OVERCLOCK, DBlocks.SLUDGE_PUMP)
                 .addStoryBoard("drill/modules", DrillingScenes::drillModules);
 
-        drills.forEach(PonderRegistry.TAGS.forTag(DRILLING)::add);
         PonderRegistry.TAGS.forTag(DRILLING)
                 .add(DBlocks.DRILL)
                 .add(DBlocks.COLLECTOR)
                 .add(DBlocks.DRILL_OVERCLOCK)
-                .add(DBlocks.SLUDGE_PUMP)
+                .add(DBlocks.SLUDGE_PUMP);
+        drills.forEach(PonderRegistry.TAGS.forTag(DRILLING)::add);
+        PonderRegistry.TAGS.forTag(DRILLING)
                 .add(DBlocks.ASURINE_NODE)
                 .add(DBlocks.CRIMSITE_NODE)
                 .add(DBlocks.OCHRUM_NODE)
