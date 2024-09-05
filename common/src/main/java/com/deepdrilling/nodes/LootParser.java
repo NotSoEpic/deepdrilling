@@ -1,9 +1,6 @@
 package com.deepdrilling.nodes;
 
 import com.deepdrilling.DrillMod;
-import com.deepdrilling.mixin.loottable.CompositeEntryBaseMixin;
-import com.deepdrilling.mixin.loottable.LootItemAccessor;
-import com.deepdrilling.mixin.loottable.LootPoolAccessor;
 import com.google.common.collect.ImmutableMap;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import io.netty.buffer.Unpooled;
@@ -69,7 +66,7 @@ public class LootParser {
 
     private static void parseTable(LootTable table, Set<Item> items) {
         for (LootPool pool : getPools(table)) {
-            for (LootPoolEntryContainer entry : ((LootPoolAccessor)pool).getEntries()) {
+            for (LootPoolEntryContainer entry : getEntries(pool)) {
                 parseEntry(entry, items);
             }
         }
@@ -90,11 +87,11 @@ public class LootParser {
     }
 
     private static void parseLootItem(LootItem lootItem, Set<Item> items) {
-        items.add(((LootItemAccessor)lootItem).getItem());
+        items.add(getItem(lootItem));
     }
 
     private static void parseCompositeEntry(CompositeEntryBase compositeEntry, Set<Item> items) {
-        for (LootPoolEntryContainer child : ((CompositeEntryBaseMixin)compositeEntry).getChildren()) {
+        for (LootPoolEntryContainer child : getChildren(compositeEntry)) {
             parseEntry(child, items);
         }
     }
@@ -152,6 +149,22 @@ public class LootParser {
             items.add(Item.byId(buf.readInt()));
         }
         return items;
+    }
+
+    // this is only necessary because common mixins REFUSE to work for both dev and production environments at the same time
+    @ExpectPlatform
+    public static Iterable<LootPoolEntryContainer> getEntries(LootPool pool) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static Item getItem(LootItem item) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static Iterable<LootPoolEntryContainer> getChildren(CompositeEntryBase compositeEntry) {
+        throw new AssertionError();
     }
 
     public record LootEntry(Set<Item> earth, Set<Item> common, Set<Item> rare){}

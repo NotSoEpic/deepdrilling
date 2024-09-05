@@ -79,7 +79,6 @@ processResources {
 loom {
     forge {
         mixinConfig(
-                "deepdrilling-common.mixins.json",
                 "deepdrilling.mixins.json"
         )
     }

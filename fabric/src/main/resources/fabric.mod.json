@@ -29,8 +29,7 @@
     ]
   },
   "mixins": [
-    "deepdrilling.mixins.json",
-    "deepdrilling-common.mixins.json"
+    "deepdrilling.mixins.json"
   ],
   "depends": {
     "minecraft": "${minecraft_version}",

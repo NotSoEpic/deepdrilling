@@ -4,12 +4,16 @@
   "package": "com.deepdrilling.forge.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "ClientPacketListenerMixin"
   ],
   "mixins": [
     "CapabilityProviderMixin",
     "CollectorModuleBEMixin",
     "DrillHeadItemMixin",
-    "LootTableAccessor"
+    "LootTableAccessor",
+    "loottable.CompositeEntryBaseMixin",
+    "loottable.LootItemAccessor",
+    "loottable.LootPoolAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
