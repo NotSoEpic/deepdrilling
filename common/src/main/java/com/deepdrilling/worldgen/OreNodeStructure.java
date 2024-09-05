@@ -27,7 +27,6 @@ public class OreNodeStructure extends Structure {
 
     private final Data data;
 
-    // todo find out why its consistently offset by 1-2 chunks
     @Override
     protected Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
         BlockPos pos = context.chunkPos().getBlockAt(

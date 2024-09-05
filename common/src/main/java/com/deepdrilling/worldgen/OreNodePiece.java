@@ -28,7 +28,7 @@ import java.util.function.Predicate;
 public class OreNodePiece extends StructurePiece {
     private final OreNodeStructure.Data data;
     public OreNodePiece(int x, int y, int z, OreNodeStructure.Data data) {
-        super(OreNodeStructure.getPieceType(), y, BoundingBox.orientBox(x, y, z, 0, 0, 0, 32, 32, 32, Direction.SOUTH));
+        super(OreNodeStructure.getPieceType(), y, BoundingBox.orientBox(x - 16, y, z - 16, 0, 0, 0, 32, 32, 32, Direction.SOUTH));
         this.data = data;
     }
 
