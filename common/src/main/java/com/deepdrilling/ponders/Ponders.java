@@ -31,6 +31,7 @@ public class Ponders {
 
         PonderRegistry.TAGS.forTag(DRILLING)
                 .add(DBlocks.DRILL)
+                .add(DBlocks.BLANK_MODULE)
                 .add(DBlocks.COLLECTOR)
                 .add(DBlocks.DRILL_OVERCLOCK)
                 .add(DBlocks.SLUDGE_PUMP);

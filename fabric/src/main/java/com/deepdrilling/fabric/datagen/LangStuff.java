@@ -28,6 +28,7 @@ public class LangStuff {
         conditionBehaviour(DBlocks.BLANK_MODULE, 1, "When attached to Drill Core", "Does _nothing_... but still _connects other Modules_.");
         summary(DBlocks.COLLECTOR, "A _Module_ to be attached to a _Drill Core_.");
         conditionBehaviour(DBlocks.COLLECTOR, 1, "When attached to Drill Core", "_Collects items_ that would otherwise be _dropped on the ground_.");
+        conditionBehaviour(DBlocks.COLLECTOR, 2, "When R-Clicked", "_Gives collected items_ in its inventory.");
         summary(DBlocks.DRILL_OVERCLOCK, "A _Module_ to be attached to a _Drill Core_.");
         conditionBehaviour(DBlocks.DRILL_OVERCLOCK, 1, "When attached to Drill Core", "_Increases speed_, but also _increases damage taken_.");
         summary(DBlocks.SLUDGE_PUMP, "A _Module_ to be attached to a _Drill Core_. _Only one_ can be used.");
