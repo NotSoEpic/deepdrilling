@@ -1,15 +1,20 @@
 package com.deepdrilling.fabric;
 
+import com.deepdrilling.DPartialModels;
 import com.deepdrilling.DrillHeadTooltips;
 import com.deepdrilling.DrillMod;
 import com.deepdrilling.fluid.fabric.FluidsImpl;
 import com.deepdrilling.nodes.LootParser;
 import com.deepdrilling.nodes.OreNodes;
 import com.deepdrilling.worldgen.fabric.OreNodeStructureImpl;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
+import io.github.fabricators_of_create.porting_lib.util.LogicalSidedProvider;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -32,6 +37,7 @@ public class DrillModFabric implements ModInitializer {
         OreNodeStructureImpl.init();
         DrillMod.REGISTRATE.register();
         registerReloadListeners();
+        PartialModelLoader.doJavaShenanigans();
     }
 
     private void registerReloadListeners() {

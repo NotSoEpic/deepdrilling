@@ -14,7 +14,7 @@ public class DPartialModels {
 
 
     public static final PartialModel
-    DRILL_CORE_SHAFT = block("drill_core/partial");
+            DRILL_CORE_SHAFT = block("drill_core/partial");
 
 
     public static PartialModel block(String path) {
@@ -34,8 +34,9 @@ public class DPartialModels {
         return getDrillHeadModel(BuiltInRegistries.BLOCK.getKey(state.getBlock()));
     }
 
-    public static void init() {
+    public static boolean init() {
         DrillMod.LOGGER.info("Loading partial models for {} drill heads", DDrillHeads.knownDrillHeads.size());
         DDrillHeads.knownDrillHeads.forEach(be -> getDrillHeadModel(be.getId()));
+        return true;
     }
 }

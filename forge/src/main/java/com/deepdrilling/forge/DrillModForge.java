@@ -1,5 +1,6 @@
 package com.deepdrilling.forge;
 
+import com.deepdrilling.DPartialModels;
 import com.deepdrilling.DrillMod;
 import com.deepdrilling.fluid.forge.FluidsImpl;
 import com.deepdrilling.worldgen.forge.OreNodeStructureImpl;
@@ -31,6 +32,7 @@ public class DrillModForge {
         FluidsImpl.init();
         OreNodeStructureImpl.init();
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            DPartialModels.init();
             DrillModClientForge.setupEvents(BUS);
         });
     }
