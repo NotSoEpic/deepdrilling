@@ -19,10 +19,6 @@ public class Ponders {
 
 
     public static void register() {
-        HELPER.forComponents(DBlocks.ASURINE_NODE, DBlocks.CRIMSITE_NODE, DBlocks.OCHRUM_NODE, DBlocks.VERIDIUM_NODE)
-                .addStoryBoard("node/locating", DrillingScenes::nodeLocating)
-                .addStoryBoard("node/biomes", DrillingScenes::nodeBiomes);
-
         List<BlockEntry<? extends Block>> drills = new ArrayList<>(DDrillHeads.knownDrillHeads);
         drills.add(DBlocks.DRILL);
         HELPER.forComponents(drills)

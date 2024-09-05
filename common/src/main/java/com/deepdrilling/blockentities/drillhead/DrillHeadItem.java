@@ -5,14 +5,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrillHeadItem extends BlockItem {@Unique
+public class DrillHeadItem extends BlockItem {
     public static final List<Enchantment> enchantments = new ArrayList<>(List.of(
-        Enchantments.UNBREAKING, Enchantments.BLOCK_EFFICIENCY, Enchantments.BLOCK_FORTUNE));
+        Enchantments.UNBREAKING, Enchantments.BLOCK_EFFICIENCY, Enchantments.BLOCK_FORTUNE, Enchantments.MENDING));
 
     public DrillHeadItem(Block block, Properties properties) {
         super(block, properties);

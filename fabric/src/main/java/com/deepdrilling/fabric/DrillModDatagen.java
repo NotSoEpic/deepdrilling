@@ -2,7 +2,7 @@ package com.deepdrilling.fabric;
 
 import com.deepdrilling.DrillMod;
 import com.deepdrilling.fabric.datagen.DrillSequencedRecipes;
-import com.simibubi.create.foundation.ponder.PonderLocalization;
+import com.deepdrilling.fabric.datagen.LangStuff;
 import com.tterrag.registrate.providers.ProviderType;
 import io.github.fabricators_of_create.porting_lib.data.ExistingFileHelper;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -10,7 +10,6 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
 import java.nio.file.Paths;
 import java.util.Set;
-import java.util.function.BiConsumer;
 
 public class DrillModDatagen implements DataGeneratorEntrypoint {
     @Override
@@ -24,19 +23,7 @@ public class DrillModDatagen implements DataGeneratorEntrypoint {
 
         DrillMod.REGISTRATE.addLang("itemGroup", DrillMod.id("main"), "Deep Drilling");
 
-        DrillMod.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> {
-            BiConsumer<String, String> langConsumer = provider::add;
-
-            PonderLocalization.generateSceneLang();
-            PonderLocalization.provideLang(DrillMod.MOD_ID, langConsumer);
-            langConsumer.accept("create.deepdrilling.recipe.ore_node", "Ore Node Drilling");
-            langConsumer.accept("deepdrilling.loot.earth", "Earth");
-            langConsumer.accept("deepdrilling.loot.common", "Common");
-            langConsumer.accept("deepdrilling.loot.rare", "Rare");
-
-            langConsumer.accept("deepdrilling.goggle.sludge_pump.backed_up", "Backed up");
-        });
-
+        DrillMod.REGISTRATE.addDataGenerator(ProviderType.LANG, LangStuff::register);
 
         pack.addProvider(DrillSequencedRecipes::new);
         // different fluid constants between forge/fabric fuck everything up

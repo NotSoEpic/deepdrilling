@@ -13,7 +13,6 @@ public class DrillMod {
     public static final Logger LOGGER = LoggerFactory.getLogger(NAME);
 
     public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(DrillMod.MOD_ID);
-//    public static CreativeModeTab BASE_CREATIVE_TAB;
 
 
     public static void init() {
