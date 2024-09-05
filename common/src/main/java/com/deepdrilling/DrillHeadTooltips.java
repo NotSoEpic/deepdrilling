@@ -59,7 +59,7 @@ public class DrillHeadTooltips implements TooltipModifier {
     public static LangBuilder makeProbabilityMultiplier(double factor, boolean numbers, String suffix) {
         LangBuilder bar = Lang.builder().text(TooltipHelper.makeProgressBar(3, barLengthProbability(factor)));
         if (numbers)
-            bar.text(LangNumberFormat.format(factor) + "x");
+            bar.text(LangNumberFormat.format(factor) + "x ");
         if (!Objects.equals(suffix, ""))
             bar.add(Components.translatable(suffix));
         return bar.style(DrillHeadTooltips.mulColor(factor));

@@ -17,6 +17,7 @@ import net.minecraft.world.level.storage.loot.entries.CompositeEntryBase;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -116,9 +117,7 @@ public class LootParser {
 
     private static void writeItems(FriendlyByteBuf buf, Set<Item> items) {
         buf.writeInt(items.size());
-        for (Item item : items) {
-            buf.writeInt(Item.getId(item));
-        }
+        items.stream().map(Item::getId).sorted().forEach(buf::writeInt);
     }
 
     // CLIENT <- SERVER SYNCING
