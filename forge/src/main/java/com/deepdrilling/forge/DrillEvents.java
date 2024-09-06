@@ -26,6 +26,10 @@ public class DrillEvents {
 
     @SubscribeEvent
     public static void syncToPlayer(OnDatapackSyncEvent event) {
-        LootParser.sendToPlayer(event.getPlayer());
+        if (event.getPlayer() != null) {
+            LootParser.sendToPlayer(event.getPlayer());
+        } else {
+            event.getPlayers().forEach(LootParser::sendToPlayer);
+        }
     }
 }
