@@ -29,7 +29,7 @@ public class DrillEvents {
         if (event.getPlayer() != null) {
             LootParser.sendToPlayer(event.getPlayer());
         } else {
-            event.getPlayers().forEach(LootParser::sendToPlayer);
+            event.getPlayerList().getPlayers().forEach(LootParser::sendToPlayer);
         }
     }
 }
